@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthPlus - Appointments (Mobile)</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#13a4ec',
+            'background-light': '#f6f7f8',
+            'background-dark': '#101c22',
+          },
+          fontFamily: { display: ['Inter'] },
+          borderRadius: { DEFAULT: '0.25rem', lg: '0.5rem', xl: '0.75rem', full: '9999px' },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  </style>
+</head>
+
+<!-- Outer wrapper simulates a 390px mobile screen centered on the page -->
+<body class="bg-gray-300 font-display flex justify-center items-start min-h-screen py-10">
+  <div class="w-[390px] min-h-[844px] bg-background-light flex flex-col shadow-2xl overflow-hidden relative">
+
+    <!-- Header -->
+    <header class="flex items-center justify-between bg-background-light border-b border-slate-200 px-4 py-3 pt-12">
+      <div class="flex items-center gap-2.5">
+        <div class="h-7 w-7 text-primary">
+          <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"
+              fill="currentColor" />
+          </svg>
+        </div>
+        <span class="text-base font-bold text-slate-900">HealthPlus</span>
+      </div>
+      <!-- Avatar placeholder for logged-in patient -->
+      <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+        <span class="material-symbols-outlined text-primary" style="font-size:18px">person</span>
+      </div>
+    </header>
+
+    <!-- Page title -->
+    <div class="px-4 pt-5 pb-3">
+      <h1 class="text-2xl font-bold text-slate-900">Upcoming Appointments</h1>
+      <p class="mt-1 text-sm text-slate-500">Here are your scheduled appointments.</p>
+    </div>
+
+    <!-- Appointment cards list -->
+    <div class="flex-1 px-4 space-y-3 pb-28 overflow-y-auto">
+
+      <!-- Card 1 -->
+      <div class="bg-white rounded-xl border border-slate-200 p-4 flex items-center gap-3 shadow-sm">
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6IF00qS91-GtwFN9GduV1UeutW2GLUVpkTEqpz4HMpTKf2W6Tq_acaqUeTISWrH80MI7I71vV9V1gBHUoh7WQIGvzZ5c_oo0HARFW2JUumIEidr7RkZszaDxQ6rM97DHm5k9eBEaxMBi9p9aGMI-nkPapZu9zuW-dgvgdUlecFtSn_p3wz2Yvdxsue3Ui91f89YGu-TTvkOqCCsbnpzI3Httx7HBufbLypLBZPuO33Rf4QZzXBGke6BBQeG1nbunqB5_1XU8A1LBk"
+          alt="Dr. Sarah Johnson"
+          class="w-12 h-12 rounded-full object-cover flex-shrink-0" />
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-slate-900 text-sm truncate">Dr. Sarah Johnson</p>
+          <p class="text-xs text-slate-500">Cardiology</p>
+          <p class="text-xs text-slate-600 mt-1">July 25, 2024 &middot; 10:00 AM</p>
+        </div>
+        <span class="material-symbols-outlined text-slate-300 flex-shrink-0">chevron_right</span>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-white rounded-xl border border-slate-200 p-4 flex items-center gap-3 shadow-sm">
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtUDPWtuVDczsyTMcxWgLlVIfyubySNkEpLnCKmvaD4PsLcyd-gnpQguUTTui6rR_BLvib_jGb3uaWfcRCulGwJLtms5VuSPsXLJH5gPbra6qmsyMVdroBY6WBpbiYTEe3EQikbhQEeCf7a_8yVVWJUXRXczmOG7IJAXxY7kpEnwA5ECaUmmbRLFc47bJ4T5uFLKwdok3yqmTcVBaS_3fFPztrcbIjTzu5i0B6dwBBFoP2a71O4NWn11u6B8P32UXZ99OiLBFH5LuD"
+          alt="Dr. Michael Chen"
+          class="w-12 h-12 rounded-full object-cover flex-shrink-0" />
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-slate-900 text-sm truncate">Dr. Michael Chen</p>
+          <p class="text-xs text-slate-500">Dermatology</p>
+          <p class="text-xs text-slate-600 mt-1">August 5, 2024 &middot; 2:30 PM</p>
+        </div>
+        <span class="material-symbols-outlined text-slate-300 flex-shrink-0">chevron_right</span>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-white rounded-xl border border-slate-200 p-4 flex items-center gap-3 shadow-sm">
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBujYHHBS5DFWxu9S9eOJAjAH6NxefNd-orfBtWytRnEly43gaiUyTuH-vg3XDWclstAkUBi6ZsG6nwfLwDgCcvPN8Z5zS3Q8wJHBY2J4_Nx8m04z2gMGfu5ZdFc_tpETzdWeNFvxzDO1z_WNrXkNa8QLYEQu0gbiiylSGY4pJWSDZ9SK1p-Y5ZR1eBOVfPtJpbOO6ZgyTsR1iDq_mVa8FqbtTYhGfEeuzbBov62iNiK2si956gnNxyGvCqID1gnPuapUVNQCdCeHgx"
+          alt="Dr. Emily Rodriguez"
+          class="w-12 h-12 rounded-full object-cover flex-shrink-0" />
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-slate-900 text-sm truncate">Dr. Emily Rodriguez</p>
+          <p class="text-xs text-slate-500">Pediatrics</p>
+          <p class="text-xs text-slate-600 mt-1">August 12, 2024 &middot; 9:15 AM</p>
+        </div>
+        <span class="material-symbols-outlined text-slate-300 flex-shrink-0">chevron_right</span>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="bg-white rounded-xl border border-slate-200 p-4 flex items-center gap-3 shadow-sm">
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuALfj1eypUmSD-wrsF1Gcyf6CdarEM9V311_CJxeGfwh7wl5Mum5pLlwWUaUP36ZloWDSJHio2UjhCAgpmP73Cnnrj5IJnM7sTlocBtHYzTi8nekk65ZWiJ39x3pGcZHJcYQm8BIDq5nOMjyAUS2-DHyCmLdkVHMxaUpCnaCRLBMmHLo-pdpBHy0dfpoaix3vbqsWefLoZXFu3OOYDbGZKkLEecaBWCoulPt8f6VI31fLQ6dHxVW3rdtrMvajkwEY-Uu_aVm0HBXg_k"
+          alt="Dr. David Lee"
+          class="w-12 h-12 rounded-full object-cover flex-shrink-0" />
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-slate-900 text-sm truncate">Dr. David Lee</p>
+          <p class="text-xs text-slate-500">Orthopedics</p>
+          <p class="text-xs text-slate-600 mt-1">September 1, 2024 &middot; 4:00 PM</p>
+        </div>
+        <span class="material-symbols-outlined text-slate-300 flex-shrink-0">chevron_right</span>
+      </div>
+
+    </div>
+
+    <!-- Fixed bottom action bar -->
+    <div class="absolute bottom-0 left-0 right-0 bg-background-light border-t border-slate-200 px-4 py-4 pb-8">
+      <button
+        class="w-full py-4 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-colors shadow-sm flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined" style="font-size:20px">add</span>
+        Book an Appointment
+      </button>
+    </div>
+
+  </div>
+</body>
+
+</html>

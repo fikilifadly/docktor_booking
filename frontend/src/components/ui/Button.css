@@ -1,0 +1,107 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Variants */
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #166fe5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+}
+
+.btn-secondary {
+  background: #f5f5f5;
+  color: var(--color-text-light);
+  border: 1px solid var(--color-border-light);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #e8e8e8;
+  transform: translateY(-1px);
+}
+
+/* Sizes */
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 14px;
+  height: 36px;
+}
+
+.btn-md {
+  padding: 12px 20px;
+  font-size: 16px;
+  height: 44px;
+}
+
+.btn-lg {
+  padding: 16px 24px;
+  font-size: 18px;
+  height: 52px;
+}
+
+/* Loading state */
+.btn-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-path {
+  stroke-dasharray: 31.416;
+  stroke-dashoffset: 31.416;
+  animation: dash 2s ease-in-out infinite;
+}
+
+.btn-text-loading {
+  opacity: 0.7;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}

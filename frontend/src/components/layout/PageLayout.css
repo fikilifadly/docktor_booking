@@ -1,0 +1,92 @@
+.page-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background-light);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--color-background-light);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  width: 32px;
+  height: 32px;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+.brand-text {
+  font-weight: 700;
+  color: var(--color-text-light);
+  font-size: 18px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-logout {
+  height: 40px;
+  padding: 0 16px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-logout:hover {
+  background: var(--color-background-light);
+  color: var(--color-text-primary);
+}
+
+.page-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+/* Login page specific layout */
+.page-layout.login-layout {
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.page-layout.login-layout .page-main {
+  padding: 0;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

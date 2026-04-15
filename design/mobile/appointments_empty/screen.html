@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthPlus - No Appointments (Mobile)</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#13a4ec',
+            'background-light': '#f6f7f8',
+            'background-dark': '#101c22',
+          },
+          fontFamily: { display: ['Inter'] },
+          borderRadius: { DEFAULT: '0.25rem', lg: '0.5rem', xl: '0.75rem', full: '9999px' },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  </style>
+</head>
+
+<!-- Outer wrapper simulates a 390px mobile screen centered on the page -->
+<body class="bg-gray-300 font-display flex justify-center items-start min-h-screen py-10">
+  <div class="w-[390px] min-h-[844px] bg-background-light flex flex-col shadow-2xl overflow-hidden relative">
+
+    <!-- Header -->
+    <header class="flex items-center justify-between bg-background-light border-b border-slate-200 px-4 py-3 pt-12">
+      <div class="flex items-center gap-2.5">
+        <div class="h-7 w-7 text-primary">
+          <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"
+              fill="currentColor" />
+          </svg>
+        </div>
+        <span class="text-base font-bold text-slate-900">HealthPlus</span>
+      </div>
+      <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+        <span class="material-symbols-outlined text-primary" style="font-size:18px">person</span>
+      </div>
+    </header>
+
+    <!-- Page title -->
+    <div class="px-4 pt-5 pb-3">
+      <h1 class="text-2xl font-bold text-slate-900">Upcoming Appointments</h1>
+      <p class="mt-1 text-sm text-slate-500">Here are your scheduled appointments.</p>
+    </div>
+
+    <!-- Empty state — centered in remaining space -->
+    <div class="flex-1 flex flex-col items-center justify-center px-6 pb-28 text-center">
+      <div class="w-48 h-48 bg-contain bg-center bg-no-repeat mb-6"
+        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBGusajaXY7S8kE3wpwHMl-M81TcsKbUpFfXwqHIuEdR5qbn-1ENtCITTLUd0dMML60sxQKx3vNeScHzsev6-nyCQqnsHEuqRqXueQGusLqnjoRAZQ9w-vaxmjWM9Axv_YlfrvbyfyP48nq7ePqmS3Gb2xUnuz8HrLjcIlTnF65HbPF91jaxW8OB7tBMFYsyJq1RUqIBfZ0HOzrDbiTbqsdrFfnCL1TImma46y6rlvwdCwnTY_PBwPSM8v_7ajKKvbIHAH-qWYlxvhj");'>
+      </div>
+      <h3 class="text-lg font-semibold text-slate-900">No upcoming appointments</h3>
+      <p class="mt-2 text-sm text-slate-500 max-w-xs">You don't have any upcoming appointments. Book one now.</p>
+    </div>
+
+    <!-- Fixed bottom action bar -->
+    <div class="absolute bottom-0 left-0 right-0 bg-background-light border-t border-slate-200 px-4 py-4 pb-8">
+      <button
+        class="w-full py-4 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-colors shadow-sm flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined" style="font-size:20px">add</span>
+        Book an Appointment
+      </button>
+    </div>
+
+  </div>
+</body>
+
+</html>

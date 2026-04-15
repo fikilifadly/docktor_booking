@@ -1,0 +1,43 @@
+/* Appointments-specific styles - layout handled by PageLayout and PageContainer components */
+.appts-header-row { display:flex; align-items:center; justify-content:space-between; margin-bottom: 24px; }
+.appts-title { margin:0; font-size: 28px; color: var(--color-text-light); }
+.appts-subtitle { margin:6px 0 0; color: var(--color-subtext-light); }
+.appts-user { margin:4px 0 0; color: var(--color-subtext-light); font-size: 14px; font-style: italic; }
+.appts-actions { display: flex; align-items: center; gap: 12px; }
+.appts-cta { height: 40px; padding: 0 20px; background: var(--color-primary); color: white; border: none; border-radius: 8px; font-weight: 600; }
+.btn-secondary { 
+  height: 40px; 
+  padding: 0 16px; 
+  background: transparent; 
+  color: var(--color-subtext-light); 
+  border: 1px solid var(--color-border-light); 
+  border-radius: 8px; 
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { 
+  background: var(--color-background-light); 
+  color: var(--color-text-light);
+}
+/* Appointments list styles */
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Legacy card styles (kept for compatibility) */
+.appts-list { border-top-left-radius: 8px; border-top-right-radius: 8px; overflow: hidden; }
+.appts-row { display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding: 16px; border-top:1px solid var(--color-border-light); }
+.appts-row:first-child { border-top: none; }
+.appts-doctor { font-weight: 600; color: var(--color-text-light); }
+.appts-notes { color: var(--color-subtext-light); font-size: 14px; }
+.appts-subtext { color: var(--color-subtext-light); font-size: 14px; }
+/* Empty state styles now handled by Card component with variant="empty" */
+.error { color: #B00020; }
+
+

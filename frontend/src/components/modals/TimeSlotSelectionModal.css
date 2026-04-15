@@ -1,0 +1,193 @@
+/* TimeSlotSelectionModal specific styles - shared modal styles imported separately */
+
+/* Override modal content to always be vertical for TimeSlotSelectionModal only */
+.time-slot-modal .modal-content {
+  flex-direction: column;
+}
+
+/* Hide the modal when confirmation is showing */
+.time-slot-modal.hidden {
+  display: none;
+}
+
+/* Doctor Info Section - Left-aligned above date/time picker */
+.doctor-info-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--spacing-lg);
+  margin: 0 0 var(--spacing-2xl);
+  width: fit-content;
+}
+
+/* Doctor avatar with higher specificity to override base styles */
+.time-slot-modal .doctor-info-section .doctor-avatar {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+}
+
+.doctor-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--color-gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-500);
+}
+
+.doctor-details {
+  text-align: left;
+}
+
+.doctor-name {
+  margin: 0 0 var(--spacing-xs);
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-gray-900);
+}
+
+.doctor-specialty {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-gray-500);
+}
+
+/* Selection Grid */
+.selection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-3xl);
+}
+
+.section-title {
+  margin: 0 0 var(--spacing-lg);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-gray-900);
+  text-align: left;
+}
+
+/* Date and time selection components handle their own styling */
+
+/* Override modal footer for TimeSlotSelectionModal - back button on left */
+.time-slot-modal .modal-footer {
+  justify-content: space-between;
+}
+
+.btn-back {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-gray-300);
+  background: var(--color-gray-50);
+  color: var(--color-gray-700);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-back:hover {
+  background: var(--color-gray-100);
+  border-color: var(--color-gray-400);
+}
+
+.btn-confirm {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: none;
+  background: var(--color-primary);
+  color: white;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.btn-confirm:hover:not(:disabled) {
+  background: var(--color-primary-light);
+}
+
+.btn-confirm:disabled {
+  background: var(--color-gray-400);
+  cursor: not-allowed;
+}
+
+/* Loading message */
+.loading-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-2xl);
+  color: var(--color-gray-500);
+  font-size: var(--text-sm);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--color-gray-50);
+}
+
+.loading-message .material-symbols-outlined {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Retry button in error message */
+.retry-button {
+  margin-left: var(--spacing-sm);
+  background: none;
+  border: none;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+}
+
+.retry-button:hover {
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .selection-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2xl);
+  }
+  
+  .time-slot-modal .modal-content {
+    padding: var(--spacing-lg);
+  }
+  
+  .time-slot-modal .modal-header {
+    padding: var(--spacing-lg);
+  }
+  
+  .time-slot-modal .modal-footer {
+    padding: var(--spacing-lg);
+    flex-direction: column;
+  }
+  
+  .btn-back,
+  .btn-confirm {
+    width: 100%;
+    justify-content: center;
+  }
+}

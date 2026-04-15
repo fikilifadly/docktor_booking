@@ -1,0 +1,153 @@
+/* TimeSlotSelectionModal specific styles - shared modal styles imported separately */
+
+/* Override modal content to always be vertical for TimeSlotSelectionModal only */
+.time-slot-modal .modal-content {
+  flex-direction: column !important;
+}
+
+/* Hide the modal when confirmation is showing */
+.time-slot-modal.hidden {
+  display: none !important;
+}
+
+/* Doctor Info Section - Left-aligned above date/time picker */
+.doctor-info-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  margin: 0 0 24px;
+  width: fit-content;
+}
+
+.time-slot-modal .doctor-avatar {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+}
+
+.doctor-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+}
+
+.doctor-details {
+  text-align: left;
+}
+
+.doctor-name {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.doctor-specialty {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Selection Grid */
+.selection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.section-title {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  text-align: left;
+}
+
+/* Date and time selection components handle their own styling */
+
+/* Override modal footer for TimeSlotSelectionModal - back button on left */
+.modal-footer {
+  justify-content: space-between !important;
+}
+
+.btn-back {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.btn-confirm {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-primary);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-confirm:hover:not(:disabled) {
+  background: #0ea5e9;
+}
+
+.btn-confirm:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .selection-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .modal-content {
+    padding: 16px;
+  }
+  
+  .modal-header {
+    padding: 16px;
+  }
+  
+  .modal-footer {
+    padding: 16px;
+    flex-direction: column;
+  }
+  
+  .btn-back,
+  .btn-confirm {
+    width: 100%;
+    justify-content: center;
+  }
+}

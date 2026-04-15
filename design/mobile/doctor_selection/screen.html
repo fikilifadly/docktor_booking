@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthPlus - Doctor Selection (Mobile)</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#13a4ec',
+            'background-light': '#f6f7f8',
+            'background-dark': '#101c22',
+          },
+          fontFamily: { display: ['Inter'] },
+          borderRadius: { DEFAULT: '0.25rem', lg: '0.5rem', xl: '0.75rem', full: '9999px' },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    /* Hide scrollbar on chip row but keep it scrollable */
+    .chips-row::-webkit-scrollbar { display: none; }
+    .chips-row { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+
+<!--
+  Key mobile design decision: the booking modal becomes a BOTTOM SHEET.
+  Instead of a centered overlay (desktop), the sheet slides up from the bottom,
+  occupying ~90% of screen height. A drag handle at the top signals this.
+
+  Filter sidebar is replaced by:
+    - A search input (full width)
+    - Horizontally scrollable specialty chips (no dropdown needed on mobile)
+-->
+<body class="bg-gray-300 font-display flex justify-center items-start min-h-screen py-10">
+  <div class="w-[390px] min-h-[844px] bg-background-light flex flex-col shadow-2xl overflow-hidden relative">
+
+    <!-- Dimmed app background (appointments page visible behind sheet) -->
+    <div class="absolute inset-0 bg-background-light">
+      <header class="flex items-center justify-between bg-background-light border-b border-slate-200 px-4 py-3 pt-12">
+        <div class="flex items-center gap-2.5">
+          <div class="h-7 w-7 text-primary">
+            <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <span class="text-base font-bold text-slate-900">HealthPlus</span>
+        </div>
+      </header>
+      <div class="px-4 pt-4">
+        <h1 class="text-xl font-bold text-slate-900">Upcoming Appointments</h1>
+      </div>
+    </div>
+
+    <!-- Scrim overlay -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+    <!-- Bottom sheet — slides up from bottom -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl flex flex-col shadow-2xl" style="height: 90%;">
+
+      <!-- Drag handle -->
+      <div class="flex justify-center pt-3 pb-1 flex-shrink-0">
+        <div class="w-10 h-1 bg-slate-300 rounded-full"></div>
+      </div>
+
+      <!-- Sheet header -->
+      <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 flex-shrink-0">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">New Appointment</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Step 1 of 2: Choose a doctor</p>
+        </div>
+        <button class="p-2 rounded-full hover:bg-slate-100 text-slate-400 transition-colors">
+          <span class="material-symbols-outlined" style="font-size:20px">close</span>
+        </button>
+      </div>
+
+      <!-- Scrollable content -->
+      <div class="flex-1 overflow-y-auto">
+
+        <!-- Search input -->
+        <div class="px-4 pt-4">
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+              style="font-size:18px">search</span>
+            <input
+              class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
+              type="text" placeholder="Search doctor name..." />
+          </div>
+        </div>
+
+        <!-- Specialty chips — horizontally scrollable, no dropdown needed on mobile -->
+        <div class="px-4 pt-3">
+          <div class="chips-row flex gap-2 overflow-x-auto pb-1">
+            <button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-primary text-white text-xs font-medium">All</button>
+            <button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">Cardiology</button>
+            <button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">Pediatrics</button>
+            <button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">Dermatology</button>
+            <button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">Orthopedics</button>
+          </div>
+        </div>
+
+        <!-- Doctor count -->
+        <div class="px-4 pt-4 pb-2">
+          <p class="text-sm font-semibold text-slate-700">Available Doctors (4)</p>
+        </div>
+
+        <!-- 2-column doctor card grid -->
+        <div class="px-4 pb-4 grid grid-cols-2 gap-3">
+
+          <!-- Selected card -->
+          <div class="bg-slate-50 p-4 rounded-xl border-2 border-primary shadow-sm cursor-pointer ring-2 ring-primary/20 flex flex-col items-center text-center">
+            <img alt="Dr. Amelia Chen"
+              class="w-16 h-16 rounded-full object-cover mb-2"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6IF00qS91-GtwFN9GduV1UeutW2GLUVpkTEqpz4HMpTKf2W6Tq_acaqUeTISWrH80MI7I71vV9V1gBHUoh7WQIGvzZ5c_oo0HARFW2JUumIEidr7RkZszaDxQ6rM97DHm5k9eBEaxMBi9p9aGMI-nkPapZu9zuW-dgvgdUlecFtSn_p3wz2Yvdxsue3Ui91f89YGu-TTvkOqCCsbnpzI3Httx7HBufbLypLBZPuO33Rf4QZzXBGke6BBQeG1nbunqB5_1XU8A1LBk" />
+            <p class="text-xs font-bold text-slate-800 leading-tight">Dr. Amelia Chen</p>
+            <p class="text-xs text-primary mt-0.5">Cardiology</p>
+          </div>
+
+          <!-- Unselected card -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 cursor-pointer hover:border-primary/60 transition-colors flex flex-col items-center text-center">
+            <img alt="Dr. Ethan Ramirez"
+              class="w-16 h-16 rounded-full object-cover mb-2"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtUDPWtuVDczsyTMcxWgLlVIfyubySNkEpLnCKmvaD4PsLcyd-gnpQguUTTui6rR_BLvib_jGb3uaWfcRCulGwJLtms5VuSPsXLJH5gPbra6qmsyMVdroBY6WBpbiYTEe3EQikbhQEeCf7a_8yVVWJUXRXczmOG7IJAXxY7kpEnwA5ECaUmmbRLFc47bJ4T5uFLKwdok3yqmTcVBaS_3fFPztrcbIjTzu5i0B6dwBBFoP2a71O4NWn11u6B8P32UXZ99OiLBFH5LuD" />
+            <p class="text-xs font-bold text-slate-800 leading-tight">Dr. Ethan Ramirez</p>
+            <p class="text-xs text-slate-500 mt-0.5">Pediatrics</p>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 cursor-pointer hover:border-primary/60 transition-colors flex flex-col items-center text-center">
+            <img alt="Dr. Sophia Walker"
+              class="w-16 h-16 rounded-full object-cover mb-2"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBujYHHBS5DFWxu9S9eOJAjAH6NxefNd-orfBtWytRnEly43gaiUyTuH-vg3XDWclstAkUBi6ZsG6nwfLwDgCcvPN8Z5zS3Q8wJHBY2J4_Nx8m04z2gMGfu5ZdFc_tpETzdWeNFvxzDO1z_WNrXkNa8QLYEQu0gbiiylSGY4pJWSDZ9SK1p-Y5ZR1eBOVfPtJpbOO6ZgyTsR1iDq_mVa8FqbtTYhGfEeuzbBov62iNiK2si956gnNxyGvCqID1gnPuapUVNQCdCeHgx" />
+            <p class="text-xs font-bold text-slate-800 leading-tight">Dr. Sophia Walker</p>
+            <p class="text-xs text-slate-500 mt-0.5">Dermatology</p>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 cursor-pointer hover:border-primary/60 transition-colors flex flex-col items-center text-center">
+            <img alt="Dr. Marcus Lee"
+              class="w-16 h-16 rounded-full object-cover mb-2"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuALfj1eypUmSD-wrsF1Gcyf6CdarEM9V311_CJxeGfwh7wl5Mum5pLlwWUaUP36ZloWDSJHio2UjhCAgpmP73Cnnrj5IJnM7sTlocBtHYzTi8nekk65ZWiJ39x3pGcZHJcYQm8BIDq5nOMjyAUS2-DHyCmLdkVHMxaUpCnaCRLBMmHLo-pdpBHy0dfpoaix3vbqsWefLoZXFu3OOYDbGZKkLEecaBWCoulPt8f6VI31fLQ6dHxVW3rdtrMvajkwEY-Uu_aVm0HBXg_k" />
+            <p class="text-xs font-bold text-slate-800 leading-tight">Dr. Marcus Lee</p>
+            <p class="text-xs text-slate-500 mt-0.5">Orthopedics</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Sticky bottom action — full-width Next button -->
+      <div class="flex-shrink-0 px-4 py-4 pb-8 border-t border-slate-100 bg-white">
+        <button
+          class="w-full py-4 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+          Next: Choose Date &amp; Time
+          <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

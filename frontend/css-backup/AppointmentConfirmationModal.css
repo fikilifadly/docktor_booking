@@ -1,0 +1,273 @@
+/* Appointment Confirmation Modal Styles - shared modal styles imported separately */
+
+/* Override any conflicting styles with more specific selectors */
+.confirmation-modal .appointment-details {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.confirmation-modal .doctor-info {
+  order: 1 !important;
+}
+
+.confirmation-modal .appointment-info {
+  order: 2 !important;
+}
+
+.confirmation-modal {
+  width: 100% !important;
+  max-width: 32rem !important; /* max-w-lg equivalent */
+  margin: 0 auto !important;
+  background-color: white !important;
+  border-radius: 0.75rem !important; /* rounded-xl equivalent */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important; /* shadow-2xl equivalent */
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.confirmation-content {
+  padding: 1.5rem 2rem !important; /* p-6 sm:p-8 equivalent */
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .confirmation-content {
+    padding: 2rem !important; /* sm:p-8 */
+  }
+}
+
+.success-icon {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  width: 4rem;
+  border-radius: 9999px;
+  background-color: #dcfce7;
+}
+
+.dark .success-icon {
+  background-color: rgba(34, 197, 94, 0.1);
+}
+
+.success-icon .material-symbols-outlined {
+  font-size: 2.25rem;
+  color: #16a34a;
+}
+
+.dark .success-icon .material-symbols-outlined {
+  color: #4ade80;
+}
+
+.confirmation-title {
+  margin-top: 0.75rem !important;
+  margin: 0.75rem 0 0 0 !important;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+}
+
+.dark .confirmation-title {
+  color: white;
+}
+
+.confirmation-subtitle {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.dark .confirmation-subtitle {
+  color: #9ca3af;
+}
+
+.appointment-details {
+  background-color: #f6f7f8;
+  padding: 1.5rem 2rem !important; /* p-6 sm:p-8 equivalent */
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+@media (min-width: 640px) {
+  .appointment-details {
+    padding: 2rem !important; /* sm:p-8 */
+  }
+}
+
+.dark .appointment-details {
+  background-color: rgba(16, 28, 34, 0.8);
+  border-color: #374151;
+}
+
+.doctor-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  order: 1 !important; /* Ensure doctor-info appears first */
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important; /* Prevent content from overflowing */
+}
+
+.confirmation-modal .doctor-avatar {
+  height: 64px !important;
+  width: 64px !important;
+  border-radius: 9999px !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+}
+
+.confirmation-modal .doctor-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark .avatar-placeholder {
+  background-color: #374151;
+}
+
+.avatar-placeholder .material-symbols-outlined {
+  font-size: 1.5rem;
+  color: #6b7280;
+}
+
+.dark .avatar-placeholder .material-symbols-outlined {
+  color: #9ca3af;
+}
+
+.doctor-details {
+  flex: 1;
+  min-width: 0; /* Allow flex item to shrink below content size */
+  max-width: 200px; /* Limit maximum width */
+}
+
+.doctor-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dark .doctor-name {
+  color: white;
+}
+
+.doctor-specialty {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dark .doctor-specialty {
+  color: #9ca3af;
+}
+
+.appointment-info {
+  margin-top: 1rem !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 1rem !important;
+  order: 2 !important; /* Ensure appointment-info appears second */
+  text-align: left !important;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  text-align: left !important;
+}
+
+.info-label {
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: #6b7280 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  justify-self: start !important;
+  align-self: start !important;
+}
+
+.dark .info-label {
+  color: #9ca3af;
+}
+
+.info-value {
+  margin-top: 0.25rem !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+  text-align: left !important;
+  justify-self: start !important;
+  align-self: start !important;
+}
+
+.dark .info-value {
+  color: white;
+}
+
+.confirmation-footer {
+  padding: 1.5rem 2rem !important; /* p-6 sm:p-8 equivalent */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .confirmation-footer {
+    padding: 2rem !important; /* sm:p-8 */
+    flex-direction: row-reverse !important; /* sm:flex-row-reverse */
+  }
+}
+
+.btn-done {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  color: white;
+  background-color: #13a4ec;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+
+.btn-done:hover {
+  opacity: 0.9;
+}
+
+.btn-done:focus {
+  outline: 2px solid #13a4ec;
+  outline-offset: 2px;
+}
+
+/* Responsive design - consolidated above */

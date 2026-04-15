@@ -1,0 +1,288 @@
+/* BookAppointmentModal specific styles - shared modal styles imported separately */
+
+.filter-sidebar {
+  width: 80%;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-gray-200);
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .filter-sidebar {
+    width: 256px;
+    border-bottom: none;
+    border-right: 1px solid var(--color-gray-200);
+  }
+}
+
+@media (min-width: 1024px) {
+  .filter-sidebar {
+    width: 288px;
+  }
+}
+
+.filter-title {
+  margin: 0 0 var(--spacing-lg);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-gray-800);
+  text-align: left;
+}
+
+.filter-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.filter-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-gray-700);
+  margin-bottom: 2px;
+  text-align: left;
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--spacing-md);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-gray-400);
+  font-size: var(--text-lg);
+  pointer-events: none;
+  z-index: 1;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.search-input {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) var(--spacing-4xl);
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--color-gray-800);
+  transition: all var(--transition-normal);
+  box-sizing: border-box;
+}
+
+.search-input::placeholder {
+  color: var(--color-gray-400);
+  opacity: 1;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(19, 164, 236, 0.5);
+  background: var(--color-card-light);
+}
+
+.search-input:focus::placeholder {
+  color: var(--color-gray-400);
+  opacity: 0.7;
+}
+
+.specialty-select {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--color-gray-800);
+  transition: all var(--transition-normal);
+}
+
+.specialty-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(19, 164, 236, 0.5);
+}
+
+.doctors-main {
+  flex: 1;
+  padding: var(--spacing-2xl);
+  overflow-y: auto;
+}
+
+.doctors-title {
+  margin: 0 0 var(--spacing-lg);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-gray-800);
+  text-align: left;
+}
+
+.doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+  width: 100%;
+  overflow-x: hidden;
+}
+
+@media (min-width: 640px) {
+  .doctors-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .doctors-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Doctor card with higher specificity to override base styles */
+.book-appointment-modal .doctor-card {
+  background: var(--color-gray-100);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-gray-200);
+  cursor: pointer;
+  transition: all var(--transition-slow);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--shadow-md);
+}
+
+.book-appointment-modal .doctor-card:hover {
+  border-color: rgba(19, 164, 236, 0.7);
+  box-shadow: var(--shadow-md);
+}
+
+.book-appointment-modal .doctor-card.selected {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md), 0 0 0 2px rgba(19, 164, 236, 0.5);
+}
+
+/* Doctor avatar with higher specificity */
+.book-appointment-modal .doctor-card .doctor-avatar {
+  width: 96px !important;
+  height: 96px !important;
+  margin: 0 auto var(--spacing-md) !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+
+.doctor-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+}
+
+/* Fallback rule for doctor avatar */
+.doctor-avatar {
+  width: 96px !important;
+  height: 96px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+
+/* Utility classes with higher specificity */
+.book-appointment-modal .text-center {
+  text-align: center;
+}
+
+.book-appointment-modal .font-bold {
+  font-weight: var(--font-bold);
+}
+
+.book-appointment-modal .text-slate-800 {
+  color: var(--color-gray-800);
+}
+
+.book-appointment-modal .text-sm {
+  font-size: var(--text-sm);
+}
+
+.book-appointment-modal .text-slate-600 {
+  color: var(--color-gray-500);
+}
+
+/* Reset default margins for h4 and p in doctor cards with higher specificity */
+.book-appointment-modal .doctor-card h4 {
+  margin: 0 0 2px 0;
+  font-size: var(--text-base);
+}
+
+.book-appointment-modal .doctor-card p {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--color-gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-400);
+  font-size: 32px;
+}
+
+/* Modal footer styles moved to shared ModalStyles.css */
+
+.book-appointment-modal .btn-cancel {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-gray-300);
+  background: var(--color-gray-50);
+  color: var(--color-gray-700);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.book-appointment-modal .btn-cancel:hover {
+  background: var(--color-gray-100);
+  border-color: var(--color-gray-400);
+}
+
+.btn-next {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: white;
+  background: var(--color-primary);
+  border: none;
+  cursor: pointer;
+  transition: opacity var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.btn-next:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Error styles moved to shared ModalStyles.css */

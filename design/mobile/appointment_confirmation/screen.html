@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthPlus - Appointment Confirmed (Mobile)</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#13a4ec',
+            'background-light': '#f6f7f8',
+            'background-dark': '#101c22',
+          },
+          fontFamily: { display: ['Inter'] },
+          borderRadius: { DEFAULT: '0.25rem', lg: '0.5rem', xl: '0.75rem', full: '9999px' },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  </style>
+</head>
+
+<!-- Confirmation uses a bottom sheet, consistent with the rest of the booking flow -->
+<body class="bg-gray-300 font-display flex justify-center items-start min-h-screen py-10">
+  <div class="w-[390px] min-h-[844px] bg-background-light flex flex-col shadow-2xl overflow-hidden relative">
+
+    <!-- Dimmed app background -->
+    <div class="absolute inset-0 bg-background-light">
+      <header class="flex items-center gap-2.5 bg-background-light border-b border-slate-200 px-4 py-3 pt-12">
+        <div class="h-7 w-7 text-primary">
+          <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="text-base font-bold text-slate-900">HealthPlus</span>
+      </header>
+    </div>
+
+    <!-- Scrim -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+    <!-- Bottom sheet -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl flex flex-col shadow-2xl" style="height: 72%;">
+
+      <!-- Drag handle -->
+      <div class="flex justify-center pt-3 pb-1 flex-shrink-0">
+        <div class="w-10 h-1 bg-slate-300 rounded-full"></div>
+      </div>
+
+      <!-- Success content -->
+      <div class="flex-1 flex flex-col px-6 pt-6 pb-4 overflow-y-auto">
+
+        <!-- Checkmark icon -->
+        <div class="flex flex-col items-center text-center mb-6">
+          <div class="flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-4">
+            <span class="material-symbols-outlined text-green-600" style="font-size:44px">check_circle</span>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-900">Appointment Confirmed</h2>
+          <p class="mt-2 text-sm text-slate-500">Your appointment has been successfully booked.</p>
+        </div>
+
+        <!-- Booking details card -->
+        <div class="bg-slate-50 rounded-xl border border-slate-100 p-4">
+          <!-- Doctor info -->
+          <div class="flex items-center gap-3 mb-4">
+            <img alt="Dr. Amelia Chen"
+              class="h-14 w-14 rounded-full object-cover flex-shrink-0"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa8VSruqhbKWNPPhmoC31ipeDp3EaXfRnaqmOJplhc0ymt0W0fliT9JEOjw8V9285AsziP6TGQIVTkh53cd7sgvbkIqXGxMYnEM_3XIiBesexABQ6XxVYTdXnIm6sv9HzG_BjS1hzSTIGY2WiCkZybClji1zT2qo7QI65XILBmQEBo4hEWrGUAujKTYxHbkjP9da_nr7KUT1RGWKzzrv5UEIULnLAMk-b2Zgl6ziUtQ1pj1jUxbZaV0WZJUsuot3pQGTLir_MtsuCd" />
+            <div>
+              <p class="font-semibold text-slate-900">Dr. Amelia Chen</p>
+              <p class="text-sm text-slate-500">Cardiology</p>
+            </div>
+          </div>
+
+          <!-- Date & time details — stacked on mobile -->
+          <div class="space-y-3 border-t border-slate-200 pt-4">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-slate-500">Date</span>
+              <span class="text-sm font-semibold text-slate-900">Monday, July 15, 2024</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-slate-500">Time</span>
+              <span class="text-sm font-semibold text-slate-900">10:00 AM</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-slate-500">Duration</span>
+              <span class="text-sm font-semibold text-slate-900">60 minutes</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Done button -->
+      <div class="flex-shrink-0 px-6 py-4 pb-8 bg-white border-t border-slate-100">
+        <button
+          class="w-full py-4 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-colors">
+          Done
+        </button>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

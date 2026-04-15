@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthPlus - Login (Mobile)</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#13a4ec',
+            'background-light': '#f6f7f8',
+            'background-dark': '#101c22',
+          },
+          fontFamily: { display: ['Inter'] },
+          borderRadius: { DEFAULT: '0.25rem', lg: '0.5rem', xl: '0.75rem', full: '9999px' },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+
+<!-- Outer wrapper simulates a 390px mobile screen centered on the page -->
+<body class="bg-gray-300 font-display flex justify-center items-start min-h-screen py-10">
+  <div class="w-[390px] min-h-[844px] bg-background-light flex flex-col shadow-2xl overflow-hidden">
+
+    <!-- Safe-area top spacer -->
+    <div class="h-12"></div>
+
+    <!-- Content — vertically centered in remaining space -->
+    <div class="flex flex-col flex-1 justify-center px-6 pb-10">
+
+      <!-- Logo -->
+      <div class="text-center mb-10">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-primary text-white mb-5 shadow-lg">
+          <svg fill="none" viewBox="0 0 48 48" class="w-12 h-12" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"
+              fill="currentColor" />
+          </svg>
+        </div>
+        <h1 class="text-3xl font-bold text-primary">HealthPlus</h1>
+        <p class="mt-1.5 text-base text-slate-500">Patient Login</p>
+      </div>
+
+      <!-- Form -->
+      <form class="space-y-4" method="POST">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1.5" for="email">Email address</label>
+          <input
+            class="w-full px-4 py-4 bg-white border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
+            id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1.5" for="password">Password</label>
+          <input
+            class="w-full px-4 py-4 bg-white border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
+            id="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <div class="pt-3">
+          <button
+            class="w-full py-4 bg-primary text-white text-base font-semibold rounded-xl hover:bg-primary/90 transition-colors shadow-sm"
+            type="submit">
+            Sign in
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthPlus - Time Slot Selection (Mobile)</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#13a4ec',
+            'background-light': '#f6f7f8',
+            'background-dark': '#101c22',
+          },
+          fontFamily: { display: ['Inter'] },
+          borderRadius: { DEFAULT: '0.25rem', lg: '0.5rem', xl: '0.75rem', full: '9999px' },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  </style>
+</head>
+
+<!--
+  Key mobile design decision: calendar and time slots stack VERTICALLY
+  (desktop shows them side-by-side in a 2-col grid).
+  The bottom sheet is scrollable — user scrolls past the calendar to reach time slots.
+  Back and Confirm buttons are always sticky at the bottom.
+-->
+<body class="bg-gray-300 font-display flex justify-center items-start min-h-screen py-10">
+  <div class="w-[390px] min-h-[844px] bg-background-light flex flex-col shadow-2xl overflow-hidden relative">
+
+    <!-- Dimmed app background -->
+    <div class="absolute inset-0 bg-background-light">
+      <header class="flex items-center gap-2.5 bg-background-light border-b border-slate-200 px-4 py-3 pt-12">
+        <div class="h-7 w-7 text-primary">
+          <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="text-base font-bold text-slate-900">HealthPlus</span>
+      </header>
+    </div>
+
+    <!-- Scrim -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+    <!-- Bottom sheet -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl flex flex-col shadow-2xl" style="height: 92%;">
+
+      <!-- Drag handle -->
+      <div class="flex justify-center pt-3 pb-1 flex-shrink-0">
+        <div class="w-10 h-1 bg-slate-300 rounded-full"></div>
+      </div>
+
+      <!-- Sheet header -->
+      <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 flex-shrink-0">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">New Appointment</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Step 2 of 2: Choose date &amp; time</p>
+        </div>
+        <button class="p-2 rounded-full hover:bg-slate-100 text-slate-400 transition-colors">
+          <span class="material-symbols-outlined" style="font-size:20px">close</span>
+        </button>
+      </div>
+
+      <!-- Scrollable content -->
+      <div class="flex-1 overflow-y-auto px-4 pt-4 pb-4 space-y-5">
+
+        <!-- Selected doctor info -->
+        <div class="flex items-center gap-3 bg-slate-50 rounded-xl p-3 border border-slate-100">
+          <img alt="Dr. Emily Carter"
+            class="h-12 w-12 rounded-full object-cover flex-shrink-0"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4NRsW2X9Lfu2aeNaySc_TUXmQpBam6O_RgFM1w5MjXMYbBcbBDwm5_52pu8E5WZdjEYyC2LZJFbJZiN6mwP70JKBssBXT1g8nwEE1QxSZXwG2d7Q2LWxqXyZpjx5wNLe4rEW_m6asTUkd_3E4R_wMhAXW3BmfRqERjzDJUnYC5DebZpVlgZL7AxM8QiuohN-t-Alg3MzDgV-Z0EyFmhqgOgd_Fb2i6tNKVqLBSmeTflpnd8WiMP1jrbH8b3CifgALb4Sv0fkI65d2" />
+          <div>
+            <p class="text-sm font-bold text-slate-900">Dr. Emily Carter</p>
+            <p class="text-xs text-slate-500">Internal Medicine</p>
+          </div>
+        </div>
+
+        <!-- Calendar — full width (not side-by-side on mobile) -->
+        <div>
+          <h4 class="text-sm font-semibold text-slate-800 mb-3">Select a Date</h4>
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+            <div class="flex items-center justify-between mb-4">
+              <button class="p-2 rounded-full hover:bg-slate-200 text-slate-600">
+                <span class="material-symbols-outlined" style="font-size:20px">chevron_left</span>
+              </button>
+              <p class="text-sm font-semibold text-slate-900">October 2024</p>
+              <button class="p-2 rounded-full hover:bg-slate-200 text-slate-600">
+                <span class="material-symbols-outlined" style="font-size:20px">chevron_right</span>
+              </button>
+            </div>
+            <div class="grid grid-cols-7 gap-0.5 text-center text-xs">
+              <div class="font-medium text-slate-400 py-1.5">Su</div>
+              <div class="font-medium text-slate-400 py-1.5">Mo</div>
+              <div class="font-medium text-slate-400 py-1.5">Tu</div>
+              <div class="font-medium text-slate-400 py-1.5">We</div>
+              <div class="font-medium text-slate-400 py-1.5">Th</div>
+              <div class="font-medium text-slate-400 py-1.5">Fr</div>
+              <div class="font-medium text-slate-400 py-1.5">Sa</div>
+              <!-- Oct 2024 starts on Tuesday -->
+              <div class="col-start-3"></div>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">1</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">2</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">3</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">4</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full bg-primary text-white font-semibold">5</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full text-slate-300 cursor-not-allowed" disabled>6</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full text-slate-300 cursor-not-allowed" disabled>7</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">8</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">9</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">10</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">11</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">12</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full text-slate-300 cursor-not-allowed" disabled>13</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full text-slate-300 cursor-not-allowed" disabled>14</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">15</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">16</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">17</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">18</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">19</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full text-slate-300 cursor-not-allowed" disabled>20</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full text-slate-300 cursor-not-allowed" disabled>21</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">22</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">23</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">24</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">25</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">26</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full text-slate-300 cursor-not-allowed" disabled>27</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full text-slate-300 cursor-not-allowed" disabled>28</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">29</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">30</button>
+              <button class="h-9 w-9 mx-auto flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-700">31</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Time slots — below calendar (stacked, not side-by-side) -->
+        <div>
+          <h4 class="text-sm font-semibold text-slate-800 mb-3">Choose a Time</h4>
+          <div class="grid grid-cols-3 gap-2">
+            <button class="py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-700 hover:border-primary hover:bg-primary/5 transition-colors">1:00 PM</button>
+            <button class="py-3 rounded-xl border border-slate-100 text-sm font-medium text-slate-300 bg-slate-50 cursor-not-allowed" disabled>2:00 PM</button>
+            <button class="py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-700 hover:border-primary hover:bg-primary/5 transition-colors">3:00 PM</button>
+            <button class="py-3 rounded-xl border-2 border-primary bg-primary/5 text-sm font-medium text-primary">4:00 PM</button>
+            <button class="py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-700 hover:border-primary hover:bg-primary/5 transition-colors">5:00 PM</button>
+            <button class="py-3 rounded-xl border border-slate-100 text-sm font-medium text-slate-300 bg-slate-50 cursor-not-allowed" disabled>6:00 PM</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sticky bottom actions — Back left, Confirm right -->
+      <div class="flex-shrink-0 flex gap-3 px-4 py-4 pb-8 border-t border-slate-100 bg-white">
+        <button
+          class="flex-none px-5 py-3.5 rounded-xl text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors">
+          Back
+        </button>
+        <button
+          class="flex-1 py-3.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-colors">
+          Confirm Appointment
+        </button>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

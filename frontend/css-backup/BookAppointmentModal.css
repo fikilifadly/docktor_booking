@@ -1,0 +1,276 @@
+/* BookAppointmentModal specific styles - shared modal styles imported separately */
+
+.filter-sidebar {
+  width: 80%;
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .filter-sidebar {
+    width: 256px;
+    border-bottom: none;
+    border-right: 1px solid #e2e8f0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .filter-sidebar {
+    width: 288px;
+  }
+}
+
+.filter-title {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: left;
+}
+
+.filter-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 2px;
+  text-align: left;
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 18px;
+  pointer-events: none;
+  z-index: 1;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px 8px 40px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1e293b;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.search-input::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #13a4ec;
+  box-shadow: 0 0 0 2px rgba(19, 164, 236, 0.5);
+  background: #ffffff;
+}
+
+.search-input:focus::placeholder {
+  color: #9ca3af;
+  opacity: 0.7;
+}
+
+.specialty-select {
+  width: 100%;
+  padding: 8px 12px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1e293b;
+  transition: all 0.2s;
+}
+
+.specialty-select:focus {
+  outline: none;
+  border-color: #13a4ec;
+  box-shadow: 0 0 0 2px rgba(19, 164, 236, 0.5);
+}
+
+.doctors-main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.doctors-title {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: left;
+}
+
+.doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+@media (min-width: 640px) {
+  .doctors-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .doctors-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.doctor-card {
+  background: #f1f5f9 !important;
+  padding: 16px !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.doctor-card:hover {
+  border-color: rgba(19, 164, 236, 0.7);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-card.selected {
+  border-color: #13a4ec !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(19, 164, 236, 0.5) !important;
+}
+
+.doctor-avatar {
+  width: 96px !important;
+  height: 96px !important;
+  margin: 0 auto 12px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+
+.doctor-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.font-bold {
+  font-weight: 700 !important;
+}
+
+.text-slate-800 {
+  color: #1e293b !important;
+}
+
+.text-sm {
+  font-size: 14px !important;
+}
+
+.text-slate-600 {
+  color: #64748b !important;
+}
+
+/* Reset default margins for h4 and p in doctor cards */
+.doctor-card h4 {
+  margin: 0 0 2px 0 !important;
+  font-size: 16px !important;
+}
+
+.doctor-card p {
+  margin: 0 !important;
+  font-size: 14px !important;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 32px;
+}
+
+/* Modal footer styles moved to shared ModalStyles.css */
+
+.btn-cancel {
+  padding: 10px 16px !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #334155 !important;
+  background: #f1f5f9 !important;
+  border: none !important;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #e2e8f0 !important;
+  border-color: transparent !important;
+}
+
+.btn-next {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background: #13a4ec;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-next:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Error styles moved to shared ModalStyles.css */

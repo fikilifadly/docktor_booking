@@ -1,0 +1,79 @@
+.time-slot-grid {
+  width: 100%;
+}
+
+.time-slot-container {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  background: white;
+}
+
+.time-slot-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.time-slot-btn {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.time-slot-btn:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: rgba(19, 164, 236, 0.05);
+  color: var(--color-primary);
+}
+
+.time-slot-btn.selected {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.time-slot-btn.selected:hover {
+  background: #0ea5e9;
+  border-color: #0ea5e9;
+}
+
+.time-slot-btn.disabled {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.time-slot-btn.disabled:hover {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #9ca3af;
+}
+
+.time-slot-btn.booked {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.time-slot-btn.booked:hover {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #9ca3af;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .time-slot-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
