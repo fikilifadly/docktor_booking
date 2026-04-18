@@ -26,13 +26,12 @@ export default function TimeSlotSelectionModal({
   isOpen,
   onClose,
   onBack,
-  selectedDoctor
+  selectedDoctor,
 }: TimeSlotSelectionModalProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [bookingError, setBookingError] = useState<string>('')
-  
   const { bookAppointment, loading } = useBookAppointment()
   
   // Fetch appointments for the selected doctor and date
@@ -61,6 +60,7 @@ export default function TimeSlotSelectionModal({
       })
       
       if (result.success) {
+        refetch()
         setShowConfirmation(true)
       } else {
         setBookingError(result.error || 'Failed to book appointment')

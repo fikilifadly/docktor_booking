@@ -52,7 +52,7 @@ export default function AppointmentsPage() {
     if (confirm('Are you sure you want to cancel this appointment?')) {
       const result = await cancelAppointment(appointmentId)
       if (result.success) {
-        // refetch()
+        refetch()
       } else {
         alert(`Failed to cancel appointment: ${result.error}`)
       }

@@ -1,4 +1,3 @@
-import React from 'react'
 import './ModalStyles.css'
 import './AppointmentConfirmationModal.css'
 
