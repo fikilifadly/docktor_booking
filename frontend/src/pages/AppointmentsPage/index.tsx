@@ -7,6 +7,7 @@ import { BookAppointmentModal } from '../../components'
 import { PageLayout, PageContainer } from '../../components/layout'
 import { useAuth } from '../../auth/useAuth'
 import './styles.css'
+import LogoutModal from '../../components/modals/LogoutModal'
 
 export default function AppointmentsPage() {
   const { loading, error, appointments, refetch } = useAppointments()
@@ -15,6 +16,7 @@ export default function AppointmentsPage() {
   const { logout, patient } = useAuth()
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalLogoutOpen, setIsModalLogoutOpen] = useState(false)
   const [showCancelled, setShowCancelled] = useState(false)
 
   const upcomingAppointments = appointments.filter(apt => apt.status !== 'cancelled')
@@ -36,6 +38,14 @@ export default function AppointmentsPage() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false)
+  }
+
+  const handleLogoutModalClose = () => {
+    setIsModalLogoutOpen(false)
+  }
+
+  const handleLogoutModalOpen = () => {
+    setIsModalLogoutOpen(true)
   }
 
   const handleDoctorSelect = (doctor: any) => {
@@ -76,7 +86,7 @@ export default function AppointmentsPage() {
   }
 
   const headerActions = (
-    <button className="btn-logout" onClick={handleLogout}>
+    <button className="btn-logout" onClick={handleLogoutModalOpen}>
       <span className="material-symbols-outlined">logout</span>
       Logout
     </button>
@@ -203,6 +213,11 @@ export default function AppointmentsPage() {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onDoctorSelect={handleDoctorSelect}
+      />
+      <LogoutModal 
+        isOpen={isModalLogoutOpen}
+        onClose={handleLogoutModalClose}
+        onConfirm={handleLogout}
       />
     </PageLayout>
   )

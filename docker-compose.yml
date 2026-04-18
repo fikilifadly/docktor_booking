@@ -53,11 +53,13 @@ services:
       - "5173:5173"
     environment:
       VITE_API_URL: http://localhost:8000/graphql
+      CHOKIDAR_USEPOLLING: "true"
     depends_on:
       - backend
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    command: npm run dev -- --host 0.0.0.0
     restart: unless-stopped
 
   pgadmin:
