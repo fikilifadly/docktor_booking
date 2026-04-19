@@ -15,9 +15,10 @@ type BookAppointmentModalProps = {
   isOpen: boolean
   onClose: () => void
   onDoctorSelect: (doctor: Doctor) => void
+  onSuccessBooked: () => void
 }
 
-export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect }: BookAppointmentModalProps) {
+export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect, onSuccessBooked }: BookAppointmentModalProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSpecialty, setSelectedSpecialty] = useState('')
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
@@ -27,7 +28,6 @@ export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect }
     searchQuery || undefined,
     selectedSpecialty || undefined
   )
-
 
   // Clear search and selection when modal opens
   useEffect(() => {
@@ -167,6 +167,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect }
           onClose={handleTimeSlotConfirm}
           onBack={handleTimeSlotBack}
           selectedDoctor={selectedDoctor}
+          onSuccessBooked={onSuccessBooked}
         />
       )}
     </div>

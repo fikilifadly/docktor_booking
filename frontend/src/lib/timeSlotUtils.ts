@@ -84,7 +84,7 @@ export function calculateTimeSlotAvailability(
   selectedDate: Date | null,
   appointmentDurationMinutes: number = 60
 ): TimeSlot[] {
-  console.log('Calculating time slot availability:', { appointments, selectedDate, appointmentDurationMinutes })
+  // console.log('Calculating time slot availability:', { appointments, selectedDate, appointmentDurationMinutes })
   
   if (!selectedDate) {
     return DEFAULT_TIME_SLOTS.map(time => ({ time, available: true }))

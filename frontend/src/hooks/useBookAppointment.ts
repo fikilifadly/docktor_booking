@@ -88,6 +88,7 @@ export function useBookAppointment() {
       const data = await graphql<{
         createAppointment: {
           ok: boolean
+          test: boolean
           error?: string
           appointment?: {
             id: string

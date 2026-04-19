@@ -20,6 +20,7 @@ type TimeSlotSelectionModalProps = {
   onClose: () => void
   onBack: () => void
   selectedDoctor: Doctor
+  onSuccessBooked: () => void
 }
 
 export default function TimeSlotSelectionModal({
@@ -27,6 +28,7 @@ export default function TimeSlotSelectionModal({
   onClose,
   onBack,
   selectedDoctor,
+  onSuccessBooked,
 }: TimeSlotSelectionModalProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
@@ -39,7 +41,7 @@ export default function TimeSlotSelectionModal({
     appointments, 
     loading: appointmentsLoading, 
     error: appointmentsError, 
-    refetch 
+    refetch
   } = useAppointmentsByDoctor(selectedDoctor.id, selectedDate)
   
   // Calculate available time slots
@@ -60,7 +62,7 @@ export default function TimeSlotSelectionModal({
       })
       
       if (result.success) {
-        refetch()
+        onSuccessBooked()
         setShowConfirmation(true)
       } else {
         setBookingError(result.error || 'Failed to book appointment')
@@ -72,6 +74,7 @@ export default function TimeSlotSelectionModal({
     setShowConfirmation(false)
     setSelectedDate(null)
     setSelectedTime(null)
+    refetch()
     onClose() // This will close the TimeSlotSelectionModal
     // The parent BookAppointmentModal will also close via its handleTimeSlotConfirm
   }

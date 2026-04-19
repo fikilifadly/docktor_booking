@@ -112,6 +112,7 @@ export default function Calendar({ selectedDate, onDateSelect, className = '' }:
                 }`}
                 onClick={() => handleDateClick(date)}
                 type="button"
+                disabled={isPastDate(date)}
               >
                 {date.getDate()}
               </button>

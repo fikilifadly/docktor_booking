@@ -36,6 +36,7 @@ export default function TimeSlotGrid({
               }`}
               onClick={() => handleTimeClick(slot.time, slot.available)}
               type="button"
+              disabled={!slot.available}
               title={slot.reason || undefined}
             >
               {slot.time}
