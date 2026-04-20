@@ -21,20 +21,56 @@ def get_patient_id_from_auth(request: Request) -> str:
     return str(data.get("sub"))
 
 
-@router.post("")
+@router.post(
+    "",
+    summary="Execute a GraphQL query or mutation",
+    response_description="GraphQL response envelope with `data` and optional `errors`",
+    responses={
+        200: {
+            "description": "GraphQL response (errors may still be present inside the body)",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "data": {"appointmentsByPatient": []},
+                        "errors": None,
+                    }
+                }
+            },
+        },
+        400: {"description": "Missing `query` field in request body"},
+        401: {"description": "Missing or invalid Bearer token"},
+    },
+)
 async def graphql_post(request: Request, patient_id: str = Depends(get_patient_id_from_auth), db_session = Depends(get_db_session)):
+    """
+    Single GraphQL endpoint. Auth required on every request.
+
+    **Supported queries:**
+    - `appointmentsByPatient` — list the authenticated patient's appointments
+    - `appointmentsByDoctor(doctorId, date)` — list non-cancelled appointments for a doctor on a date
+    - `doctors(q, specialty)` — list/filter available doctors
+    - `doctorAvailability(doctorId, date)` — fixed time slots for a doctor on a date
+
+    **Supported mutations:**
+    - `createAppointment(doctorId, startTime, durationMinutes?, notes?)`
+    - `cancelAppointment(id)`
+    - `rescheduleAppointment(id, newStartTime, newDurationMinutes?)`
+    - `changeDoctor(id, newDoctorId)`
+
+    All mutations return `{ ok: Boolean!, error: String, appointment: Appointment }` (where applicable).
+    See `backend/docs/API_CONTRACT.md` for full schema details.
+    """
     body = await request.json()
     query = body.get("query")
     variables = body.get("variables")
     if not query:
         raise HTTPException(status_code=400, detail="Missing GraphQL query")
-    
-    # Inject database session into GraphQL context
+
     context_value = {
         "patient_id": patient_id,
-        "db_session": db_session
+        "db_session": db_session,
     }
-    
+
     result = schema.execute(query, variable_values=variables, context_value=context_value)
     resp = {}
     if result.errors:
@@ -44,7 +80,12 @@ async def graphql_post(request: Request, patient_id: str = Depends(get_patient_i
     return JSONResponse(resp)
 
 
-@router.get("")
+@router.get(
+    "",
+    summary="GraphQL endpoint info",
+    response_description="Plain text usage hint",
+    include_in_schema=False,
+)
 async def graphql_get():
     return PlainTextResponse("Send POST requests with GraphQL query to this endpoint.")
 
