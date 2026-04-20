@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Any
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, EmailStr
 import time
@@ -8,6 +8,16 @@ from src.auth.jwt_utils import issue_token
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+class PatientOut(BaseModel):
+    id: str
+    email: str
+
+
+class LoginResponse(BaseModel):
+    token: str
+    patient: PatientOut
 
 
 class LoginInput(BaseModel):
@@ -39,8 +49,28 @@ def check_rate_limit(req: Request) -> None:
     bucket.append(now)
 
 
-@router.post("/login")
+@router.post(
+    "/login",
+    response_model=LoginResponse,
+    summary="Authenticate and obtain a JWT",
+    responses={
+        200: {"description": "Successful login — returns a Bearer JWT and patient info"},
+        401: {"description": "Invalid credentials"},
+        422: {"description": "Validation error (e.g. malformed email)"},
+        429: {"description": "Rate limit exceeded — 10 requests/min/IP"},
+    },
+)
 def login(payload: LoginInput, request: Request):
+    """
+    Exchange email + password for a signed JWT (HS256, expires in 60 minutes).
+
+    Pass the returned `token` as `Authorization: Bearer <token>` on all
+    subsequent GraphQL requests.
+
+    **Dev credentials:**
+    - `alice@example.com` / `password123`
+    - `bob@example.com` / `password456`
+    """
     check_rate_limit(request)
     user = validate_credentials(payload.email, payload.password)
     if not user:

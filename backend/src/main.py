@@ -13,7 +13,19 @@ async def lifespan(_: FastAPI):
     # Place shutdown logic here if needed
 
 
-app = FastAPI(title="Appointment Booking API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(
+    title="Appointment Booking API",
+    version="1.0.0",
+    description=(
+        "REST + GraphQL backend for appointment booking.\n\n"
+        "**Auth**: POST `/auth/login` → receive a Bearer JWT → pass it as "
+        "`Authorization: Bearer <token>` on all `/graphql` requests.\n\n"
+        "**GraphQL**: all queries and mutations are served at `POST /graphql`. "
+        "See the API contract at `backend/docs/API_CONTRACT.md` for the full "
+        "GraphQL schema (types, queries, mutations)."
+    ),
+    lifespan=lifespan,
+)
 
 # CORS: allow frontend dev origin
 app.add_middleware(
@@ -29,6 +41,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(graphql_router)
 
-@app.get("/")
+@app.get("/", summary="Health check", tags=["meta"])
 async def root():
+    """Returns a simple liveness message confirming the API is running."""
     return {"message": "Appointment Booking API"}
