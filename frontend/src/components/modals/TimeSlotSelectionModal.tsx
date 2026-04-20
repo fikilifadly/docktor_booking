@@ -20,7 +20,7 @@ type TimeSlotSelectionModalProps = {
   onClose: () => void
   onBack: () => void
   selectedDoctor: Doctor
-  onSuccessBooked: () => void
+  onSuccessBooked?: () => void
 }
 
 export default function TimeSlotSelectionModal({
@@ -58,11 +58,11 @@ export default function TimeSlotSelectionModal({
       const result = await bookAppointment({
         doctor: selectedDoctor,
         date: selectedDate,
-        time: selectedTime
+        time: selectedTime,
       })
       
       if (result.success) {
-        onSuccessBooked()
+        onSuccessBooked?.()
         setShowConfirmation(true)
       } else {
         setBookingError(result.error || 'Failed to book appointment')

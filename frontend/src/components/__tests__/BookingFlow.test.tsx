@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '../../test/utils'
 import TimeSlotSelectionModal from '../modals/TimeSlotSelectionModal'
 
 // Mock the current time to be 10:00 AM so time slots are available
-const mockDate = new Date('2025-09-26T10:00:00.000Z')
+const mockDate = new Date()
 vi.setSystemTime(mockDate)
 
 // Mock the useBookAppointment hook

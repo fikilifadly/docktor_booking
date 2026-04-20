@@ -13,7 +13,7 @@ export function validateEmail(email: string): string | null {
     return 'Email is required'
   }
   
-  const emailRegex = /^.+@.+$/
+  const emailRegex = /^\S+@\S+\.\S+$/
   if (!emailRegex.test(email)) {
     return 'Please enter a valid email address'
   }

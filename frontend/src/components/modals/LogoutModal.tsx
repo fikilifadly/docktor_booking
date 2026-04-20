@@ -26,7 +26,7 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }: LogoutModalProps) => {
             className="btn btn-logout"
             onClick={onConfirm}
           >
-            Logout
+            Confirm
           </button>
         </div>
       </div>

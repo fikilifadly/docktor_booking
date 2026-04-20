@@ -117,7 +117,7 @@ export function useBookAppointment() {
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to book appointment'
-      // setError(errorMessage)
+      setError(errorMessage)
       return {
         success: false,
         error: errorMessage

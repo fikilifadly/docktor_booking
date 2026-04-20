@@ -54,14 +54,13 @@ export default function LoginPage() {
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="field-stack">
             <Input
-              type="email"
+              type="text"
               placeholder="Email address"
               value={state.email}
               onChange={actions.setEmail}
               error={state.errors.email}
               disabled={state.loading}
               autoComplete="email"
-              required
             />
             <Input
               type="password"
@@ -71,7 +70,6 @@ export default function LoginPage() {
               error={state.errors.password}
               disabled={state.loading}
               autoComplete="current-password"
-              required
             />
             {state.generalError && (
               <div className="general-error" role="alert">
