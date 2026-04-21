@@ -2,12 +2,7 @@ import { useEffect, useState } from 'react'
 import { graphql } from '../../../lib/api'
 import { useAuth } from '../../../auth/useAuth'
 
-type Doctor = {
-  id: string
-  name: string
-  specialty: string
-  avatarUrl?: string | null
-}
+import type { Doctor } from '../../../types/index.types'
 
 const QUERY = `query Doctors($q: String, $specialty: String) { 
   doctors(q: $q, specialty: $specialty) { 

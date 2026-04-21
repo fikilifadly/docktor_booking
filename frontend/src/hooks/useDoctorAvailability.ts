@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { graphql } from '../lib/api';
-import { useAuth } from '../auth/useAuth';
+import { useEffect, useState } from 'react'
+import { graphql } from '../lib/api'
+import { useAuth } from '../auth/useAuth'
 
 const DOCTOR_AVAILABILITY_QUERY = `
   query DoctorAvailability($doctorId: String!, $date: Date!) {
@@ -8,10 +8,9 @@ const DOCTOR_AVAILABILITY_QUERY = `
       startTime
     } 
   }
-`;
+`
 
 const useDoctorAvailability = (doctorId: string | null, date: Date | null) => {
-  console.log("useDoctorAvailability called with doctorId:", doctorId, "date:", date)
   const { token } = useAuth()
   const [availability, setAvailability] = useState<string[]>([])
   const [loading, setLoading] = useState(false)

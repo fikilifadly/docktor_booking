@@ -2,18 +2,21 @@ import './TimeSlotGrid.css'
 import type { TimeSlot } from '../../lib/timeSlotUtils'
 
 type TimeSlotGridProps = {
-  selectedTime: string | null
+  selectedTime?: string | null
   onTimeSelect: (time: string) => void
   slots: TimeSlot[]
   className?: string
+  clickAble?: boolean
 }
 
 export default function TimeSlotGrid({ 
   selectedTime, 
   onTimeSelect, 
   slots,
-  className = '' 
+  className = '',
+  clickAble = true,
 }: TimeSlotGridProps) {
+console.log('Rendering TimeSlotGrid with slots:', slots, 'selectedTime:', selectedTime)
   const handleTimeClick = (time: string, available: boolean) => {
     if (available) {
       onTimeSelect(time)
@@ -36,7 +39,7 @@ export default function TimeSlotGrid({
               }`}
               onClick={() => handleTimeClick(slot.time, slot.available)}
               type="button"
-              disabled={!slot.available}
+              disabled={!slot.available || !clickAble}
               title={slot.reason || undefined}
             >
               {slot.time}

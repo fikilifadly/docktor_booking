@@ -2,23 +2,7 @@ import { useState } from 'react'
 import { useCancelAppointment } from '../hooks/useCancelAppointment'
 import './AppointmentCard.css'
 
-type Appointment = {
-  id: string
-  doctorId: string
-  startTime: string
-  durationMinutes: number
-  status: string
-  notes?: string | null
-  createdAt: string
-  updatedAt: string
-}
-
-type Doctor = {
-  id: string
-  name: string
-  specialty: string
-  avatarUrl?: string | null
-}
+import type { Doctor, Appointment } from '../types/index.types'
 
 type AppointmentCardProps = {
   appointment: Appointment

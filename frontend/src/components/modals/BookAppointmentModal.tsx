@@ -1,33 +1,47 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useDoctors } from '../../features/appointments/hooks/useDoctors'
 import TimeSlotSelectionModal from './TimeSlotSelectionModal'
 import './ModalStyles.css'
 import './BookAppointmentModal.css'
+import { Calendar, TimeSlotGrid } from '../ui'
+import useDoctorAvailability from '../../hooks/useDoctorAvailability'
+import { calculateTimeSlotAvailability } from '../../lib/timeSlotUtils'
 
-type Doctor = {
-  id: string
-  name: string
-  specialty: string
-  avatarUrl?: string | null
-}
+import type { Doctor, Appointment } from '../../types/index.types'
 
 type BookAppointmentModalProps = {
   isOpen: boolean
   onClose: () => void
-  onDoctorSelect: (doctor: Doctor) => void
   onSuccessBooked: () => void
+  appointments: Appointment[]
+  doctors: Doctor[]
 }
 
-export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect, onSuccessBooked }: BookAppointmentModalProps) {
+export default function BookAppointmentModal({ isOpen, onClose, onSuccessBooked, appointments, doctors }: BookAppointmentModalProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSpecialty, setSelectedSpecialty] = useState('')
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
   const [showTimeSlotModal, setShowTimeSlotModal] = useState(false)
+  const [showCalendar, setShowCalendar] = useState(false)
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const calendarRef = useRef<HTMLDivElement>(null)
+  const { availability } = useDoctorAvailability(selectedDoctor?.id || null, selectedDate)
+  const selectedDoctorAppointments = appointments.filter(apt => apt.doctorId === selectedDoctor?.id)
+  const slots = calculateTimeSlotAvailability(selectedDoctorAppointments, availability, selectedDate)
 
-  const { loading, error, doctors } = useDoctors(
-    searchQuery || undefined,
-    selectedSpecialty || undefined
-  )
+  useEffect(() => {
+    if (showCalendar && calendarRef.current) {
+      calendarRef.current.scrollTo({
+        top: calendarRef.current.scrollHeight,
+        behavior: "smooth",
+      })
+    }
+  }, [showCalendar])
+
+  const handleToggleCalendar = () => {
+    setShowCalendar((prev) => !prev)
+
+  }
 
   // Clear search and selection when modal opens
   useEffect(() => {
@@ -38,6 +52,13 @@ export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect, 
       setShowTimeSlotModal(false)
     }
   }, [isOpen])
+
+  // clear all state when search query or specialty changes
+  useEffect(() => {
+    setSelectedDoctor(null)
+    setShowTimeSlotModal(false)
+    setSelectedDate(null)
+  }, [searchQuery, selectedSpecialty])
 
   // In production, this would be fetched from the backend
   const specialties = ['All Specialties', 'Neurology', 'Diagnostics', 'Pediatrician', 'Dermatology', 'Family Medicine']
@@ -77,7 +98,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect, 
         </div>
 
         <div className="modal-content">
-          <aside className="filter-sidebar">
+          <aside className="filter-sidebar" ref={calendarRef}>
             <h3 className="filter-title">Filter Doctors</h3>
             <div className="filter-controls">
               <div className="filter-group">
@@ -110,12 +131,22 @@ export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect, 
                 </select>
               </div>
             </div>
+            <div className="cta-show-calendar">
+              <button className="btn-show-calendar" onClick={handleToggleCalendar}>
+                Show Doctor Availability
+              </button>
+            </div>
+            {showCalendar && <div className="date-selection">
+              <h4 className="section-title">Select a Date</h4>
+              <Calendar
+                selectedDate={selectedDate}
+                onDateSelect={setSelectedDate}
+              />
+            </div>}
           </aside>
 
           <main className="doctors-main">
             <h3 className="doctors-title">Available Doctors ({doctors.length})</h3>
-            {loading && <div>Loading doctors...</div>}
-            {error && <div className="error" role="alert">{error}</div>}
             <div className="doctors-grid">
               {doctors.map((doctor) => (
                 <div
@@ -125,8 +156,8 @@ export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect, 
                 >
                   <div className="doctor-avatar">
                     {doctor.avatarUrl ? (
-                      <img 
-                        src={doctor.avatarUrl} 
+                      <img
+                        src={doctor.avatarUrl}
                         alt={doctor.name}
                       />
                     ) : (
@@ -142,6 +173,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect, 
                 </div>
               ))}
             </div>
+            {(selectedDoctor && selectedDate && showCalendar) && <TimeSlotGrid slots={slots} onTimeSelect={() => {}} showHint={true} />}
           </main>
         </div>
 
@@ -149,8 +181,8 @@ export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect, 
           <button className="btn-cancel" onClick={onClose}>
             Cancel
           </button>
-          <button 
-            className="btn-next" 
+          <button
+            className="btn-next"
             onClick={handleNext}
             disabled={!selectedDoctor}
           >

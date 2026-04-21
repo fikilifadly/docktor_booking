@@ -9,12 +9,7 @@ import './ModalStyles.css'
 import './TimeSlotSelectionModal.css'
 import useDoctorAvailability from '../../hooks/useDoctorAvailability'
 
-type Doctor = {
-  id: string
-  name: string
-  specialty: string
-  avatarUrl?: string | null
-}
+import type { Doctor } from '../../types/index.types'
 
 type TimeSlotSelectionModalProps = {
   isOpen: boolean
@@ -46,7 +41,6 @@ export default function TimeSlotSelectionModal({
   } = useAppointmentsByDoctor(selectedDoctor.id, selectedDate)
 
   const available = useDoctorAvailability(selectedDoctor.id, selectedDate)
-  console.log("available", available)
   
   // Calculate available time slots
   const timeSlots = calculateTimeSlotAvailability(appointments, available.availability, selectedDate)

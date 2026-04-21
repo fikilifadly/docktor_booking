@@ -1,12 +1,7 @@
 import './ModalStyles.css'
 import './AppointmentConfirmationModal.css'
 
-type Doctor = {
-  id: string
-  name: string
-  specialty: string
-  avatarUrl?: string | null
-}
+import type { Doctor } from '../../types/index.types'
 
 type AppointmentConfirmationModalProps = {
   isOpen: boolean

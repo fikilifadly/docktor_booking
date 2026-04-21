@@ -3,12 +3,7 @@ import { useDoctors } from '../hooks/useDoctors'
 import { TimeSlotSelectionModal } from '../../../components/modals'
 import './BookAppointmentModal.css'
 
-type Doctor = {
-  id: string
-  name: string
-  specialty: string
-  avatarUrl?: string | null
-}
+import type { Doctor } from '../../../types/index.types'
 
 type BookAppointmentModalProps = {
   isOpen: boolean
@@ -26,7 +21,6 @@ export default function BookAppointmentModal({ isOpen, onClose, onDoctorSelect }
     searchQuery || undefined,
     selectedSpecialty || undefined
   )
-
 
   // Clear search and selection when modal opens
   useEffect(() => {

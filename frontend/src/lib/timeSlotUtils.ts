@@ -41,13 +41,12 @@ function isTimeSlotInPast(slotStart: Date): boolean {
 
   return slotStart <= bufferTime
 }
-
 /**
  * Main calculator
  */
 export function calculateTimeSlotAvailability(
   appointments: Appointment[],
-  availableSlots: string[], // ISO from backend
+  availableSlots: string[],
   selectedDate: Date | null,
   appointmentDurationMinutes: number = 60
 ): TimeSlot[] {

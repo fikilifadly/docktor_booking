@@ -2,12 +2,7 @@ import { useState } from 'react'
 import { graphql } from '../lib/api'
 import { useAuth } from '../auth/useAuth'
 
-type Doctor = {
-  id: string
-  name: string
-  specialty: string
-  avatarUrl?: string | null
-}
+import type { Doctor } from '../types/index.types'
 
 type BookAppointmentParams = {
   doctor: Doctor

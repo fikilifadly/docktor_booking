@@ -285,4 +285,10 @@
   cursor: not-allowed;
 }
 
-/* Error styles moved to shared ModalStyles.css */
+.btn-show-calendar {
+  width: 100%;
+  margin: 20px 0;
+  font-size: 15px;
+  background: #438843;
+  color: white;
+}

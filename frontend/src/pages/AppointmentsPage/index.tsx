@@ -15,7 +15,8 @@
     const { cancelAppointment, loading: cancelLoading } = useCancelAppointment()
     const { logout, patient } = useAuth()
     const navigate = useNavigate()
-    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const [isModalAppointmentOpen, setisModalAppointmentOpen] = useState(false)
     const [isModalLogoutOpen, setIsModalLogoutOpen] = useState(false)
     const [showCancelled, setShowCancelled] = useState(false)
 
@@ -32,22 +33,11 @@
       return map
     }, [doctors])
 
-
-    const handleToggleBookAppointment = () => {
-      setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
+    const handleToggleBookAppointmentModal = () => {
+      setisModalAppointmentOpen((previsModalAppointmentOpen) => !previsModalAppointmentOpen);
     }
-
-    const handleLogoutModalClose = () => {
-      setIsModalLogoutOpen(false)
-    }
-
-    const handleLogoutModalOpen = () => {
-      setIsModalLogoutOpen(true)
-    }
-
-    const handleDoctorSelect = (doctor: any) => {
-      console.log('Selected doctor:', doctor)
-      // This is now handled by the modal flow
+    const handleToggleLogoutModal = () => {
+      setIsModalLogoutOpen((prevIsModalLogoutOpen) => !prevIsModalLogoutOpen);
     }
 
     const handleLogout = () => {
@@ -83,7 +73,7 @@
     }
 
     const headerActions = (
-      <button className="btn-logout" onClick={handleLogoutModalOpen}>
+      <button className="btn-logout" onClick={handleToggleLogoutModal}>
         <span className="material-symbols-outlined">logout</span>
         Logout
       </button>
@@ -98,7 +88,7 @@
               <p className="appts-subtitle">Here are your scheduled appointments.</p>
             </div>
             <div className="appts-actions">
-              <button className="appts-cta" onClick={handleToggleBookAppointment}>Book an Appointment</button>
+              <button className="appts-cta" onClick={handleToggleBookAppointmentModal}>Book an Appointment</button>
             </div>
           </div>
 
@@ -132,6 +122,7 @@
                         .map((appointment) => {
                           const { date, time } = formatDateTime(appointment.startTime)
                           const doctor = doctorMap.get(appointment.doctorId)
+                          console.log("doctor for appointment", doctor, appointment.doctorId)
                           
                           return (
                             <div key={appointment.id} className="appointment-row">
@@ -207,14 +198,15 @@
         </PageContainer>
 
         <BookAppointmentModal
-          isOpen={isModalOpen}
-          onClose={handleToggleBookAppointment}
-          onDoctorSelect={handleDoctorSelect}
+          isOpen={isModalAppointmentOpen}
+          onClose={handleToggleBookAppointmentModal}
           onSuccessBooked={refetch}
+          appointments={appointments}
+          doctors={doctors}
         />
         <LogoutModal 
           isOpen={isModalLogoutOpen}
-          onClose={handleLogoutModalClose}
+          onClose={handleToggleLogoutModal}
           onConfirm={handleLogout}
         />
       </PageLayout>
