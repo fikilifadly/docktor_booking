@@ -7,6 +7,7 @@ import { useAppointmentsByDoctor } from '../../hooks/useAppointmentsByDoctor'
 import { calculateTimeSlotAvailability } from '../../lib/timeSlotUtils'
 import './ModalStyles.css'
 import './TimeSlotSelectionModal.css'
+import useDoctorAvailability from '../../hooks/useDoctorAvailability'
 
 type Doctor = {
   id: string
@@ -35,7 +36,7 @@ export default function TimeSlotSelectionModal({
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [bookingError, setBookingError] = useState<string>('')
   const { bookAppointment, loading } = useBookAppointment()
-  
+    
   // Fetch appointments for the selected doctor and date
   const { 
     appointments, 
@@ -43,9 +44,12 @@ export default function TimeSlotSelectionModal({
     error: appointmentsError, 
     refetch
   } = useAppointmentsByDoctor(selectedDoctor.id, selectedDate)
+
+  const available = useDoctorAvailability(selectedDoctor.id, selectedDate)
+  console.log("available", available)
   
   // Calculate available time slots
-  const timeSlots = calculateTimeSlotAvailability(appointments, selectedDate)
+  const timeSlots = calculateTimeSlotAvailability(appointments, available.availability, selectedDate)
   
   // Reset selected time when date changes
   useEffect(() => {
@@ -153,7 +157,7 @@ export default function TimeSlotSelectionModal({
               />
             </div>
             
-            <div className="time-selection">
+            {selectedDate && <div className="time-selection">
               <h4 className="section-title">Choose a Time</h4>
               {appointmentsLoading ? (
                 <div className="loading-message">
@@ -167,7 +171,7 @@ export default function TimeSlotSelectionModal({
                   slots={timeSlots}
                 />
               )}
-            </div>
+            </div>}
           </div>
         </div>
 

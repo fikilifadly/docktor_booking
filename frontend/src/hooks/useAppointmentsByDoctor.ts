@@ -68,14 +68,10 @@ export function useAppointmentsByDoctor(
 
   // Fetch appointments when doctorId or date changes
   useEffect(() => {
+    setError(null)
     fetchAppointments()
   }, [doctorId, date])
-
-  // Reset error when doctorId or date changes
-  useEffect(() => {
-    setError(null)
-  }, [doctorId, date])
-
+  
   return {
     appointments,
     loading,
