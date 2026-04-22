@@ -59,9 +59,9 @@ export function calculateTimeSlotAvailability(
       hour: 'numeric',
       minute: '2-digit',
       hour12: true,
+      timeZone: 'UTC',
     })
 
-    // 1️⃣ Past check
     if (isTimeSlotInPast(slotStart)) {
       return {
         time: displayTime,
@@ -70,7 +70,6 @@ export function calculateTimeSlotAvailability(
       }
     }
 
-    // 2️⃣ Conflict check (only needed if backend does NOT exclude booked)
     const isBooked = appointments.some((appointment) =>
       isTimeSlotBooked(slotStart, appointment, appointmentDurationMinutes)
     )

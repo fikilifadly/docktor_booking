@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { useDoctors } from '../../features/appointments/hooks/useDoctors'
 import TimeSlotSelectionModal from './TimeSlotSelectionModal'
 import './ModalStyles.css'
 import './BookAppointmentModal.css'
@@ -173,7 +172,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccessBooked,
                 </div>
               ))}
             </div>
-            {(selectedDoctor && selectedDate && showCalendar) && <TimeSlotGrid slots={slots} onTimeSelect={() => {}} showHint={true} />}
+            {(selectedDoctor && selectedDate && showCalendar) && <TimeSlotGrid slots={slots} onTimeSelect={() => {}} />}
           </main>
         </div>
 

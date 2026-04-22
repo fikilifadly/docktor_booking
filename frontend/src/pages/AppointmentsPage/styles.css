@@ -218,6 +218,42 @@
   cursor: not-allowed;
 }
 
+.btn-change-appointment {
+  padding: 8px 16px;
+  width: max-content;
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-change-appointment:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn-reschedule-appointment {
+  padding: 8px 16px;
+  width: max-content;
+  background: transparent;
+  color: #59a363;
+  border: 1px solid #59a363;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-reschedule-appointment:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: white;
+}
+
 /* Empty State */
 .empty-state {
   margin-top: 32px;
