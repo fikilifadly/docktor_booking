@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "../ui/Calendar";
 import TimeSlotGrid from "../ui/TimeSlotGrid";
 import useDoctorAvailability from "../../hooks/useDoctorAvailability";
@@ -21,8 +21,18 @@ export default function RescheduleAppointmentModal({ isOpen, onClose, onConfirm,
   const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
   const [selectedTime, setSelectedTime] = useState<string | null>(initialTime);
   const { availability, loading } = useDoctorAvailability(doctorId, selectedDate);
+  console.log("availability", availability);
   const selectedDoctorAppointments = appointments.filter((apt: Appointment) => apt.doctorId === doctorId);
   const slots = calculateTimeSlotAvailability(selectedDoctorAppointments, availability, selectedDate);
+
+  useEffect(() => {
+  if (isOpen) {
+    setSelectedDate(initialDate);
+    setSelectedTime(initialTime);
+  }
+}, [isOpen, initialDate, initialTime]);
+
+  console.log("selectedDate", selectedDate, slots);
 
   if (!isOpen) return null;
 
@@ -51,6 +61,8 @@ export default function RescheduleAppointmentModal({ isOpen, onClose, onConfirm,
             />
           </>
         )}
+
+
 
         <div className="modal-actions">
           <button

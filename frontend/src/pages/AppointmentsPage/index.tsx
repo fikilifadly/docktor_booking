@@ -16,8 +16,8 @@ import Constants from "../../constants";
 import useChangeDoctor from "../../hooks/useChangeDoctor";
 import ChangeDoctorModal from "../../components/modals/ChangeDoctorModal";
 import useRescheduleAppointment from "../../hooks/useRescheduleAppointment";
-import RescheduleAppointmentModal from "../../components/modals/RescheduleAppointmentModal"
-import { splitDateUtc } from "../../lib/timeSlotUtils";
+import RescheduleAppointmentModal from "../../components/modals/RescheduleAppointmentModal";
+import { splitDateUtc, combineDateAndTime } from "../../lib/timeSlotUtils";
 
 const {
   NUMBERS: { ZERO },
@@ -36,10 +36,36 @@ export default function AppointmentsPage() {
   const [isChangeDoctorOpen, setIsChangeDoctorOpen] = useState(false);
   const [isModalRescheduleOpen, setIsModalRescheduleOpen] = useState(false);
 
+  const { upcoming, pasts, cancellations } = useMemo(() => {
+    const now = new Date();
+
+    const upcoming: typeof appointments = [];
+    const pasts: typeof appointments = [];
+    const cancellations: typeof appointments = [];
+
+    appointments.forEach((apt) => {
+      if (apt.status === CANCELLED) {
+        cancellations.push(apt);
+        return;
+      }
+
+      const start = new Date(apt.startTime);
+
+      if (start < now) {
+        pasts.push(apt);
+      } else {
+        upcoming.push(apt);
+      }
+    });
+
+    return { upcoming, pasts, cancellations };
+  }, [appointments]);
+
   const [selectedAppointment, setSelectedAppointment] = useState<{
     id: string;
-    doctorName: string;
-    speciality: string;
+    doctorId?: string;
+    doctorName?: string;
+    speciality?: string;
     startTime: string;
     startDate?: Date;
   } | null>(null);
@@ -61,7 +87,7 @@ export default function AppointmentsPage() {
     setPendingReschedule({
       appointmentId,
       newDate,
-      newTime
+      newTime,
     });
 
     setIsModalRescheduleOpen(false);
@@ -113,7 +139,7 @@ export default function AppointmentsPage() {
     setPendingDoctorChange({
       appointmentId: selectedAppointment.id,
       newDoctorId: doctorId,
-      prevDoctorName: selectedAppointment.doctorName,
+      prevDoctorName: selectedAppointment?.doctorName || "",
       newDoctorName: newDoctor?.name || doctorId,
     });
 
@@ -169,7 +195,8 @@ export default function AppointmentsPage() {
         case CONFIRMATION_TYPE.RESCHEDULE.type: {
           if (!pendingReschedule) return;
 
-          const result = await rescheduleAppointment(pendingReschedule.appointmentId, pendingReschedule.newDate);
+          const putDateAndTImeTogether = combineDateAndTime(pendingReschedule.newDate, pendingReschedule.newTime);
+          const result = await rescheduleAppointment(pendingReschedule.appointmentId, putDateAndTImeTogether);
 
           if (result.success) {
             toast.success(CONFIRMATION_TYPE.RESCHEDULE.toastSuccess);
@@ -209,9 +236,9 @@ export default function AppointmentsPage() {
   const [isModalAppointmentOpen, setisModalAppointmentOpen] = useState(false);
   const [showCancelled, setShowCancelled] = useState(false);
 
-  const upcomingAppointments = appointments.filter((apt) => apt.status !== CANCELLED);
-  const hasUpcomingAppointments = upcomingAppointments.length > ZERO;
-  const hasAnyAppointments = appointments.length > ZERO;
+  const hasUpcomingAppointments = upcoming.length > ZERO;
+  const hasPastAppointments = pasts.length > ZERO;
+  const hasCancelledAppointments = cancellations.length > ZERO;
 
   // Create a mapping from doctorId to doctor information
   const doctorMap = useMemo(() => {
@@ -298,90 +325,93 @@ export default function AppointmentsPage() {
           </div>
         )}
 
-        {!loading && !error && hasAnyAppointments && (
+        {!loading && !error && (
           <div className="appointments-sections">
             {/* Upcoming Appointments */}
-            {appointments.filter((apt) => apt.status !== CANCELLED).length > ZERO && (
+            {hasUpcomingAppointments && (
               <div className="appointments-section">
                 <h2 className="section-title">Scheduled Appointments</h2>
+
                 <div className="appointments-container">
                   <div className="appointments-list">
-                    {appointments
-                      .filter((appointment) => appointment.status !== CANCELLED)
-                      .map((appointment) => {
-                        const { date, time } = formatDateTime(appointment.startTime);
-                        const doctor = doctorMap.get(appointment.doctorId);
-                        const cancelDetail = `Dr. ${doctor?.name || appointment.doctorId} on ${date} at ${time}`;
+                    {upcoming.map((appointment) => {
+                      const { date, time } = formatDateTime(appointment.startTime);
+                      const doctor = doctorMap.get(appointment.doctorId);
 
-                        return (
-                          <div
-                            key={appointment.id}
-                            className="appointment-row"
-                          >
-                            <div className="appointment-doctor-info">
-                              <p className="doctor-name">{doctor?.name || `Dr. ${appointment.doctorId}`}</p>
-                              <p className="doctor-specialty">{doctor?.specialty || "General Practice"}</p>
-                            </div>
-                            <div className="appointment-datetime">
-                              <p className="appointment-date">{date}</p>
-                              <p className="appointment-time">{time}</p>
-                            </div>
-                            <div className="appointment-actions">
-                              <button
-                                className="btn-cancel-appointment"
-                                onClick={handleOpenConfirmationModal(CONFIRMATION_TYPE.CANCEL.type, appointment.id, cancelDetail)}
-                                disabled={cancelLoading}
-                              >
-                                {cancelLoading ? "Cancelling..." : "Cancel"}
-                              </button>
-                              <button
-                                className="btn-change-appointment"
-                                onClick={() => {
-                                  const doctor = doctorMap.get(appointment.doctorId);
+                      const cancelDetail = `Dr. ${doctor?.name || appointment.doctorId} on ${date} at ${time}`;
 
-                                  setSelectedAppointment({
-                                    id: appointment.id,
-                                    doctorName: doctor?.name || appointment.doctorId,
-                                    speciality: doctor?.specialty || "General Practice",
-                                    startTime: appointment.startTime,
-                                  });
-
-                                  setIsChangeDoctorOpen(true);
-                                }}
-                                disabled={cancelLoading}
-                              >
-                                {changeLoading ? "Changing Doctor..." : "Change Doctor"}
-                              </button>
-                              <button
-                                className="btn-reschedule-appointment"
-                                onClick={() => {
-                                  const doctor = doctorMap.get(appointment.doctorId);
-                                  const { splitDate, splitTime } = splitDateUtc(new Date(appointment.startTime));
-
-                                  setSelectedAppointment({
-                                    id: appointment.id,
-                                    doctorName: appointment.doctorId,
-                                    speciality: doctor?.specialty || "General Practice",
-                                    startTime: splitTime,
-                                    startDate: splitDate, 
-                                  });
-                                  setIsModalRescheduleOpen(true);
-                                }}
-                                disabled={cancelLoading}
-                              >
-                                {cancelLoading ? "Rescheduling..." : "Reschedule"}
-                              </button>
-                            </div>
+                      return (
+                        <div
+                          key={appointment.id}
+                          className="appointment-row"
+                        >
+                          <div className="appointment-doctor-info">
+                            <p className="doctor-name">{doctor?.name || `Dr. ${appointment.doctorId}`}</p>
+                            <p className="doctor-specialty">{doctor?.specialty || "General Practice"}</p>
                           </div>
-                        );
-                      })}
+
+                          <div className="appointment-datetime">
+                            <p className="appointment-date">{date}</p>
+                            <p className="appointment-time">{time}</p>
+                          </div>
+
+                          <div className="appointment-actions">
+                            <button
+                              className="btn-cancel-appointment"
+                              onClick={handleOpenConfirmationModal(CONFIRMATION_TYPE.CANCEL.type, appointment.id, cancelDetail)}
+                              disabled={cancelLoading}
+                            >
+                              {cancelLoading ? "Cancelling..." : "Cancel"}
+                            </button>
+
+                            <button
+                              className="btn-change-appointment"
+                              onClick={() => {
+                                setSelectedAppointment({
+                                  id: appointment.id,
+                                  doctorId: appointment.doctorId,
+                                  doctorName: doctor?.name || appointment.doctorId,
+                                  speciality: doctor?.specialty || "General Practice",
+                                  startTime: appointment.startTime,
+                                });
+                                setIsChangeDoctorOpen(true);
+                              }}
+                              disabled={cancelLoading}
+                            >
+                              {changeLoading ? "Changing..." : "Change Doctor"}
+                            </button>
+
+                            <button
+                              className="btn-reschedule-appointment"
+                              onClick={() => {
+                                const { splitDate, splitTime } = splitDateUtc(new Date(appointment.startTime));
+
+                                setSelectedAppointment({
+                                  id: appointment.id,
+                                  doctorName: doctor?.name,
+                                  doctorId: appointment.doctorId,
+                                  speciality: doctor?.specialty || "General Practice",
+                                  startTime: splitTime,
+                                  startDate: splitDate,
+                                });
+
+                                setIsModalRescheduleOpen(true);
+                              }}
+                              disabled={cancelLoading}
+                            >
+                              {cancelLoading ? "Rescheduling..." : "Reschedule"}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
             )}
 
             {/* Cancelled Appointments - Collapsible */}
-            {appointments.filter((apt) => apt.status === CANCELLED).length > ZERO && (
+            {hasCancelledAppointments && (
               <div className="appointments-section cancelled-appointments-section">
                 <button
                   className="section-toggle"
@@ -392,22 +422,58 @@ export default function AppointmentsPage() {
                     <span className="material-symbols-outlined">expand_more</span>
                   </span>
                 </button>
-                {showCancelled && (
+                <div className="appointments-container">
+                  <div className="appointments-list">
+                    {cancellations.map((cancelled) => {
+                      const { date, time } = formatDateTime(cancelled.startTime);
+                      const doctor = doctorMap.get(cancelled.doctorId);
+
+                      return (
+                        <div
+                          key={cancelled.id}
+                          className="appointment-row cancelled"
+                        >
+                          <div className="appointment-doctor-info">
+                            <p className="doctor-name">{doctor?.name || `Dr. ${cancelled.doctorId}`}</p>
+                            <p className="doctor-specialty">{doctor?.specialty || "General Practice"}</p>
+                          </div>
+                          <div className="appointment-datetime">
+                            <p className="appointment-date">{date}</p>
+                            <p className="appointment-time">{time}</p>
+                          </div>
+                          <div className="appointment-actions">{/* No action button for cancelled appointments */}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {hasPastAppointments && (
+              <div className="appointments-section cancelled-appointments-section">
+                <button
+                  className="section-toggle"
+                  onClick={() => setShowCancelled(!showCancelled)}
+                >
+                  <h2 className="section-title">Past Appointments ({appointments.filter((apt) => apt.status === CANCELLED).length})</h2>
+                  <span className={`toggle-icon ${showCancelled ? "expanded" : ""}`}>
+                    <span className="material-symbols-outlined">expand_more</span>
+                  </span>
+                </button>
                   <div className="appointments-container">
                     <div className="appointments-list">
-                      {appointments
-                        .filter((appointment) => appointment.status === "cancelled")
-                        .map((appointment) => {
-                          const { date, time } = formatDateTime(appointment.startTime);
-                          const doctor = doctorMap.get(appointment.doctorId);
+                      {pasts.map((pasts) => {
+                          const { date, time } = formatDateTime(pasts.startTime);
+                          const doctor = doctorMap.get(pasts.doctorId);
 
                           return (
                             <div
-                              key={appointment.id}
+                              key={pasts.id}
                               className="appointment-row cancelled"
                             >
                               <div className="appointment-doctor-info">
-                                <p className="doctor-name">{doctor?.name || `Dr. ${appointment.doctorId}`}</p>
+                                <p className="doctor-name">{doctor?.name || `Dr. ${pasts.doctorId}`}</p>
                                 <p className="doctor-specialty">{doctor?.specialty || "General Practice"}</p>
                               </div>
                               <div className="appointment-datetime">
@@ -420,7 +486,6 @@ export default function AppointmentsPage() {
                         })}
                     </div>
                   </div>
-                )}
               </div>
             )}
           </div>
@@ -453,15 +518,14 @@ export default function AppointmentsPage() {
           setIsModalRescheduleOpen(false);
           setSelectedAppointment(null);
           setPendingReschedule(null);
-          
         }}
         appointments={appointments}
         appointmentId={selectedAppointment?.id || ""}
-        doctorId={selectedAppointment?.doctorName || ""}
-        initialDate={new Date(selectedAppointment?.startDate || '')}
+        doctorId={selectedAppointment?.doctorId || ""}
+        initialDate={new Date(selectedAppointment?.startDate || "")}
         initialTime={selectedAppointment?.startTime || ""}
         onConfirm={handleConfirmReschedule}
-        />
+      />
     </PageLayout>
   );
 }

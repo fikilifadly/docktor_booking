@@ -1,3 +1,7 @@
+import Constants from "../constants"
+
+const { NUMBERS: { ZERO, ONE} } = Constants
+
 export type Appointment = {
   id: string
   startTime: string
@@ -12,11 +16,37 @@ export type TimeSlot = {
   reason?: string
 }
 
+
 export const splitDateUtc = (date: Date): { splitDate: Date; splitTime: string } => {
-  const splitDate = new Date(date.toISOString().split('T')[0])
+  const splitDate = new Date(date.toISOString().split('T')[ZERO])
   const splitTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   
   return { splitDate, splitTime }
+}
+
+export function combineDateAndTime(
+  date: Date,
+  timeString: string
+): Date {
+  const [time, modifier] = timeString.split(" ");
+
+  let hours: number;
+  const minutes: number = Number(time.split(":")[ONE]);
+
+  hours = Number(time.split(":")[0]);
+
+  if (modifier === "PM" && hours !== 12) {
+    hours += 12;
+  }
+
+  if (modifier === "AM" && hours === 12) {
+    hours = 0;
+  }
+
+  const combined = new Date(date);
+  combined.setHours(hours, minutes, 0, 0);
+
+  return combined;
 }
 
 /**

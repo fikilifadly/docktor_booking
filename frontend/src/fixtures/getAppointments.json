@@ -1,0 +1,56 @@
+{
+    "data": {
+        "appointmentsByPatient": [
+            {
+                "id": "26f090f7-4971-41ec-a58c-7c9a87fd8634",
+                "doctorId": "dr_murphy",
+                "startTime": "2026-04-23T11:00:00+00:00",
+                "durationMinutes": 60,
+                "status": "cancelled",
+                "notes": "Appointment with Dr. Shaun Murphy (Family Medicine)",
+                "createdAt": "2026-04-23T09:27:18.995776+00:00",
+                "updatedAt": "2026-04-23T09:27:24.142546+00:00"
+            },
+            {
+                "id": "38b673f6-5705-48d0-811b-763098f8bb38",
+                "doctorId": "dr_mcCoy",
+                "startTime": "2026-04-23T15:00:00+00:00",
+                "durationMinutes": 60,
+                "status": "scheduled",
+                "notes": "Appointment with Dr. Leonard McCoy (Neurology)",
+                "createdAt": "2026-04-23T13:31:01.556777+00:00",
+                "updatedAt": "2026-04-23T13:31:01.556780+00:00"
+            },
+            {
+                "id": "e1a0ce7c-d039-41cb-ba71-62c037a4aeff",
+                "doctorId": "dr_mcCoy",
+                "startTime": "2026-04-24T11:00:00+00:00",
+                "durationMinutes": 60,
+                "status": "scheduled",
+                "notes": "Appointment with Dr. Stephen Strange (Neurology)",
+                "createdAt": "2026-04-23T15:23:26.998411+00:00",
+                "updatedAt": "2026-04-23T16:38:04.492089+00:00"
+            },
+            {
+                "id": "68fbedba-6d28-41c3-b4f6-c60b06e1dd8d",
+                "doctorId": "dr_mcCoy",
+                "startTime": "2026-04-28T11:00:00+00:00",
+                "durationMinutes": 60,
+                "status": "scheduled",
+                "notes": "Appointment with Dr. Leonard McCoy (Neurology)",
+                "createdAt": "2026-04-23T09:26:55.448647+00:00",
+                "updatedAt": "2026-04-23T16:26:21.504879+00:00"
+            },
+            {
+                "id": "b5cacab7-2a0a-44ac-aa43-703cdee6c65a",
+                "doctorId": "dr_strange",
+                "startTime": "2026-04-30T15:00:00+00:00",
+                "durationMinutes": 60,
+                "status": "scheduled",
+                "notes": "Appointment with Dr. Stephen Strange (Neurology)",
+                "createdAt": "2026-04-23T07:50:30.737499+00:00",
+                "updatedAt": "2026-04-23T16:26:31.265346+00:00"
+            }
+        ]
+    }
+}
