@@ -16,7 +16,6 @@ export default function TimeSlotGrid({
   className = '',
   clickAble = true,
 }: TimeSlotGridProps) {
-console.log('Rendering TimeSlotGrid with slots:', slots, 'selectedTime:', selectedTime)
   const handleTimeClick = (time: string, available: boolean) => {
     if (available) {
       onTimeSelect(time)

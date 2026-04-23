@@ -59,7 +59,7 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    command: npm run dev -- --host 0.0.0.0
+    command: sh -c "if [ ! -d node_modules ]; then npm ci; fi && npm run dev -- --host 0.0.0.0"
     restart: unless-stopped
 
   pgadmin:

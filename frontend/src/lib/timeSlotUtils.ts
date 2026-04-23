@@ -12,6 +12,13 @@ export type TimeSlot = {
   reason?: string
 }
 
+export const splitDateUtc = (date: Date): { splitDate: Date; splitTime: string } => {
+  const splitDate = new Date(date.toISOString().split('T')[0])
+  const splitTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  
+  return { splitDate, splitTime }
+}
+
 /**
  * Check if slot overlaps with an appointment
  */
@@ -37,9 +44,9 @@ function isTimeSlotBooked(
  */
 function isTimeSlotInPast(slotStart: Date): boolean {
   const now = new Date()
-  const bufferTime = new Date(now.getTime() + 30 * 60000)
-
-  return slotStart <= bufferTime
+  const bufferTime = now.getTime() + 30 * 60000
+  
+  return slotStart.getTime() <= bufferTime
 }
 /**
  * Main calculator
@@ -59,7 +66,6 @@ export function calculateTimeSlotAvailability(
       hour: 'numeric',
       minute: '2-digit',
       hour12: true,
-      timeZone: 'UTC',
     })
 
     if (isTimeSlotInPast(slotStart)) {

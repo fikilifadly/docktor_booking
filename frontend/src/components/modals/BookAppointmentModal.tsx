@@ -27,6 +27,13 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccessBooked,
   const { availability } = useDoctorAvailability(selectedDoctor?.id || null, selectedDate)
   const selectedDoctorAppointments = appointments.filter(apt => apt.doctorId === selectedDoctor?.id)
   const slots = calculateTimeSlotAvailability(selectedDoctorAppointments, availability, selectedDate)
+  const getdDoctorsSpecialty = [...new Set(doctors.map(doc => doc.specialty))]
+
+  const filteredDoctors = doctors.filter(doctor => {
+    const matchesSearch = doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesSpecialty = selectedSpecialty ? doctor.specialty === selectedSpecialty : true
+    return matchesSearch && matchesSpecialty
+  })
 
   useEffect(() => {
     if (showCalendar && calendarRef.current) {
@@ -60,7 +67,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccessBooked,
   }, [searchQuery, selectedSpecialty])
 
   // In production, this would be fetched from the backend
-  const specialties = ['All Specialties', 'Neurology', 'Diagnostics', 'Pediatrician', 'Dermatology', 'Family Medicine']
+  const specialties = ['All Specialties', ...getdDoctorsSpecialty]
 
   const handleDoctorClick = (doctor: Doctor) => {
     setSelectedDoctor(doctor)
@@ -145,9 +152,9 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccessBooked,
           </aside>
 
           <main className="doctors-main">
-            <h3 className="doctors-title">Available Doctors ({doctors.length})</h3>
+            <h3 className="doctors-title">Available Doctors ({filteredDoctors.length})</h3>
             <div className="doctors-grid">
-              {doctors.map((doctor) => (
+              {filteredDoctors.map((doctor) => (
                 <div
                   key={doctor.id}
                   className={`doctor-card ${selectedDoctor?.id === doctor.id ? 'selected' : ''}`}

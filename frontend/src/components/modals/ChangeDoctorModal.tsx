@@ -22,8 +22,8 @@ const ChangeDoctorModal = ({
   if (!isOpen) return null
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="modal-change-doctor-overlay">
+      <div className="modal-change-doctor-content">
         <h2>Change Appointment</h2>
 
         <p className="current-doctor">

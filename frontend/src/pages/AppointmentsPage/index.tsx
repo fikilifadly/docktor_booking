@@ -12,13 +12,68 @@ import type { ConfirmationType } from "./AppointmentsPage.config";
 import { CONFIRMATION_TYPE } from "./AppointmentsPage.config";
 import { toast } from "react-toastify";
 import { getConfirmationTitleMessage } from "./AppointmentPage.utils";
+import Constants from "../../constants";
+import useChangeDoctor from "../../hooks/useChangeDoctor";
+import ChangeDoctorModal from "../../components/modals/ChangeDoctorModal";
+import useRescheduleAppointment from "../../hooks/useRescheduleAppointment";
+import RescheduleAppointmentModal from "../../components/modals/RescheduleAppointmentModal"
+import { splitDateUtc } from "../../lib/timeSlotUtils";
+
+const {
+  NUMBERS: { ZERO },
+  STATUS_APPOINTMENT: { CANCELLED },
+} = Constants;
 
 export default function AppointmentsPage() {
   const { loading, error, appointments, refetch } = useAppointments();
   const { doctors } = useDoctors();
   const { cancelAppointment, loading: cancelLoading } = useCancelAppointment();
-  const { logout, patient } = useAuth();
+  const { logout } = useAuth();
+  const { changeDoctor, loading: changeLoading } = useChangeDoctor();
+  const { rescheduleAppointment } = useRescheduleAppointment();
   const navigate = useNavigate();
+
+  const [isChangeDoctorOpen, setIsChangeDoctorOpen] = useState(false);
+  const [isModalRescheduleOpen, setIsModalRescheduleOpen] = useState(false);
+
+  const [selectedAppointment, setSelectedAppointment] = useState<{
+    id: string;
+    doctorName: string;
+    speciality: string;
+    startTime: string;
+    startDate?: Date;
+  } | null>(null);
+
+  const [pendingDoctorChange, setPendingDoctorChange] = useState<{
+    appointmentId: string;
+    newDoctorId: string;
+    prevDoctorName: string;
+    newDoctorName: string;
+  } | null>(null);
+
+  const [pendingReschedule, setPendingReschedule] = useState<{
+    appointmentId: string;
+    newDate: Date;
+    newTime: string;
+  } | null>(null);
+
+  const handleConfirmReschedule = (appointmentId: string, newDate: Date, newTime: string) => {
+    setPendingReschedule({
+      appointmentId,
+      newDate,
+      newTime
+    });
+
+    setIsModalRescheduleOpen(false);
+
+    setConfirmationStateModal({
+      isOpen: true,
+      type: CONFIRMATION_TYPE.RESCHEDULE.type,
+      appointmentId,
+      prevState: `${selectedAppointment?.startDate?.toLocaleDateString()} at ${selectedAppointment?.startTime}`,
+      newState: `${newDate.toLocaleDateString()} at ${newTime}`,
+    });
+  };
 
   const [confirmationStateModal, setConfirmationStateModal] = useState<{
     isOpen: boolean;
@@ -50,29 +105,85 @@ export default function AppointmentsPage() {
     });
   };
 
+  const handleSelectNewDoctor = (doctorId: string) => {
+    if (!selectedAppointment) return;
+
+    const newDoctor = doctorMap.get(doctorId);
+
+    setPendingDoctorChange({
+      appointmentId: selectedAppointment.id,
+      newDoctorId: doctorId,
+      prevDoctorName: selectedAppointment.doctorName,
+      newDoctorName: newDoctor?.name || doctorId,
+    });
+
+    setIsChangeDoctorOpen(false);
+
+    setConfirmationStateModal({
+      isOpen: true,
+      type: CONFIRMATION_TYPE.CHANGE_DOCTOR.type,
+      appointmentId: selectedAppointment.id,
+      prevState: selectedAppointment.doctorName,
+      newState: newDoctor?.name || doctorId,
+    });
+  };
+
   const handleOnConfirmActionModal = async () => {
     if (!confirmationStateModal.type || !confirmationStateModal.appointmentId) return;
 
     try {
       switch (confirmationStateModal.type) {
-        case CONFIRMATION_TYPE.LOGOUT.type:
+        case CONFIRMATION_TYPE.LOGOUT.type: {
           logout();
           navigate("/login");
           break;
-        case CONFIRMATION_TYPE.CANCEL.type:
-          await cancelAppointment(confirmationStateModal.appointmentId);
-          toast.success(CONFIRMATION_TYPE.CANCEL.toastSuccess);
+        }
+
+        case CONFIRMATION_TYPE.CANCEL.type: {
+          const result = await cancelAppointment(confirmationStateModal.appointmentId);
+
+          if (result.success) {
+            toast.success(CONFIRMATION_TYPE.CANCEL.toastSuccess);
+          } else {
+            toast.error(CONFIRMATION_TYPE.CANCEL.toastError);
+          }
+
           break;
-        case CONFIRMATION_TYPE.CHANGE_DOCTOR.type:
-          // Implement change doctor logic here, e.g. call changeDoctor API
-          toast.success(CONFIRMATION_TYPE.CHANGE_DOCTOR.toastSuccess);
+        }
+
+        case CONFIRMATION_TYPE.CHANGE_DOCTOR.type: {
+          if (!pendingDoctorChange) return;
+
+          const result = await changeDoctor(pendingDoctorChange.appointmentId, pendingDoctorChange.newDoctorId);
+
+          if (result.success) {
+            toast.success(CONFIRMATION_TYPE.CHANGE_DOCTOR.toastSuccess);
+          } else {
+            toast.error(CONFIRMATION_TYPE.CHANGE_DOCTOR.toastError);
+          }
+
+          setPendingDoctorChange(null);
           break;
-        case CONFIRMATION_TYPE.RESCHEDULE.type:
-          // Implement reschedule logic here, e.g. call reschedule API
-          toast.success(CONFIRMATION_TYPE.RESCHEDULE.toastSuccess);
+        }
+
+        case CONFIRMATION_TYPE.RESCHEDULE.type: {
+          if (!pendingReschedule) return;
+
+          const result = await rescheduleAppointment(pendingReschedule.appointmentId, pendingReschedule.newDate);
+
+          if (result.success) {
+            toast.success(CONFIRMATION_TYPE.RESCHEDULE.toastSuccess);
+          } else {
+            toast.error(CONFIRMATION_TYPE.RESCHEDULE.toastError);
+          }
+
+          setPendingReschedule(null);
           break;
-        default:
+        }
+
+        default: {
           break;
+        }
       }
     } catch (err) {
       console.error(err);
@@ -96,12 +207,11 @@ export default function AppointmentsPage() {
   };
 
   const [isModalAppointmentOpen, setisModalAppointmentOpen] = useState(false);
-  const [isModalLogoutOpen, setIsModalLogoutOpen] = useState(false);
   const [showCancelled, setShowCancelled] = useState(false);
 
-  const upcomingAppointments = appointments.filter((apt) => apt.status !== "cancelled");
-  const hasUpcomingAppointments = upcomingAppointments.length > 0;
-  const hasAnyAppointments = appointments.length > 0;
+  const upcomingAppointments = appointments.filter((apt) => apt.status !== CANCELLED);
+  const hasUpcomingAppointments = upcomingAppointments.length > ZERO;
+  const hasAnyAppointments = appointments.length > ZERO;
 
   // Create a mapping from doctorId to doctor information
   const doctorMap = useMemo(() => {
@@ -123,13 +233,11 @@ export default function AppointmentsPage() {
         month: "long",
         day: "numeric",
         year: "numeric",
-        timeZone: 'UTC',
       }),
       time: date.toLocaleTimeString([], {
         hour: "numeric",
         minute: "2-digit",
         hour12: true,
-        timeZone: 'UTC',
       }),
     };
   };
@@ -193,15 +301,14 @@ export default function AppointmentsPage() {
         {!loading && !error && hasAnyAppointments && (
           <div className="appointments-sections">
             {/* Upcoming Appointments */}
-            {appointments.filter((apt) => apt.status !== "cancelled").length > 0 && (
+            {appointments.filter((apt) => apt.status !== CANCELLED).length > ZERO && (
               <div className="appointments-section">
                 <h2 className="section-title">Scheduled Appointments</h2>
                 <div className="appointments-container">
                   <div className="appointments-list">
                     {appointments
-                      .filter((appointment) => appointment.status !== "cancelled")
+                      .filter((appointment) => appointment.status !== CANCELLED)
                       .map((appointment) => {
-                        console.log("mapping appointment", appointment);
                         const { date, time } = formatDateTime(appointment.startTime);
                         const doctor = doctorMap.get(appointment.doctorId);
                         const cancelDetail = `Dr. ${doctor?.name || appointment.doctorId} on ${date} at ${time}`;
@@ -229,14 +336,37 @@ export default function AppointmentsPage() {
                               </button>
                               <button
                                 className="btn-change-appointment"
-                                onClick={handleOpenConfirmationModal(CONFIRMATION_TYPE.CHANGE_DOCTOR.type, appointment.id, cancelDetail, "another doctor")}
+                                onClick={() => {
+                                  const doctor = doctorMap.get(appointment.doctorId);
+
+                                  setSelectedAppointment({
+                                    id: appointment.id,
+                                    doctorName: doctor?.name || appointment.doctorId,
+                                    speciality: doctor?.specialty || "General Practice",
+                                    startTime: appointment.startTime,
+                                  });
+
+                                  setIsChangeDoctorOpen(true);
+                                }}
                                 disabled={cancelLoading}
                               >
-                                {cancelLoading ? "Changing Doctor..." : "Change Doctor"}
+                                {changeLoading ? "Changing Doctor..." : "Change Doctor"}
                               </button>
                               <button
                                 className="btn-reschedule-appointment"
-                                onClick={handleOpenConfirmationModal(CONFIRMATION_TYPE.RESCHEDULE.type, appointment.id, cancelDetail)}
+                                onClick={() => {
+                                  const doctor = doctorMap.get(appointment.doctorId);
+                                  const { splitDate, splitTime } = splitDateUtc(new Date(appointment.startTime));
+
+                                  setSelectedAppointment({
+                                    id: appointment.id,
+                                    doctorName: appointment.doctorId,
+                                    speciality: doctor?.specialty || "General Practice",
+                                    startTime: splitTime,
+                                    startDate: splitDate, 
+                                  });
+                                  setIsModalRescheduleOpen(true);
+                                }}
                                 disabled={cancelLoading}
                               >
                                 {cancelLoading ? "Rescheduling..." : "Reschedule"}
@@ -251,13 +381,13 @@ export default function AppointmentsPage() {
             )}
 
             {/* Cancelled Appointments - Collapsible */}
-            {appointments.filter((apt) => apt.status === "cancelled").length > 0 && (
+            {appointments.filter((apt) => apt.status === CANCELLED).length > ZERO && (
               <div className="appointments-section cancelled-appointments-section">
                 <button
                   className="section-toggle"
                   onClick={() => setShowCancelled(!showCancelled)}
                 >
-                  <h2 className="section-title">Cancelled ({appointments.filter((apt) => apt.status === "cancelled").length})</h2>
+                  <h2 className="section-title">Cancelled ({appointments.filter((apt) => apt.status === CANCELLED).length})</h2>
                   <span className={`toggle-icon ${showCancelled ? "expanded" : ""}`}>
                     <span className="material-symbols-outlined">expand_more</span>
                   </span>
@@ -308,15 +438,30 @@ export default function AppointmentsPage() {
         isOpen={confirmationStateModal.isOpen}
         onClose={handleCloseConfirmationModal}
         onConfirm={handleOnConfirmActionModal}
-        {...getConfirmationTitleMessage(confirmationStateModal.type ?? "", confirmationStateModal.prevState)}
+        {...getConfirmationTitleMessage(confirmationStateModal.type ?? "", confirmationStateModal.prevState, confirmationStateModal.newState)}
       />
-      {/* <ChangeAppointmentModal
-        isOpen={isModalChangeOpen}
-        onClose={handleToggleChangeAppointmentModal}
-        appointment={selectedAppointment}
-        doctors={availableDoctors}
-        onSuccessChange={refetch}
-      /> */}
+      <ChangeDoctorModal
+        isOpen={isChangeDoctorOpen}
+        onClose={() => setIsChangeDoctorOpen(false)}
+        onConfirm={handleSelectNewDoctor}
+        availableDoctors={doctors.filter((doctor) => selectedAppointment?.speciality === doctor.specialty)}
+        currentDoctorName={selectedAppointment?.doctorName || ""}
+      />
+      <RescheduleAppointmentModal
+        isOpen={isModalRescheduleOpen}
+        onClose={() => {
+          setIsModalRescheduleOpen(false);
+          setSelectedAppointment(null);
+          setPendingReschedule(null);
+          
+        }}
+        appointments={appointments}
+        appointmentId={selectedAppointment?.id || ""}
+        doctorId={selectedAppointment?.doctorName || ""}
+        initialDate={new Date(selectedAppointment?.startDate || '')}
+        initialTime={selectedAppointment?.startTime || ""}
+        onConfirm={handleConfirmReschedule}
+        />
     </PageLayout>
   );
 }

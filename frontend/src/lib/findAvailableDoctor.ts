@@ -1,52 +1,61 @@
-// utils/findAvailableDoctor.ts
-
 import type { Doctor, Appointment } from '../types/index.types'
 import { calculateTimeSlotAvailability } from './timeSlotUtils'
 import Constants from '../constants'
 
-const { 
+const {
   STATUS_APPOINTMENT: { SCHEDULED },
-  NUMBERS: { ZERO },
 } = Constants
 
 export function findAvailableDoctorsForChange(
+  targetAppointment: Appointment,
   doctors: Doctor[],
   appointments: Appointment[],
-  doctorAvailabilities: Record<string, string[]>,
-  appointmentToChange: Appointment
+  doctorAvailabilities: Record<string, string[]>
 ): Doctor[] {
-  const {
-    id: appointmentId,
-    doctorId: currentDoctorId,
-    startTime,
-    durationMinutes,
-  } = appointmentToChange
+  const appointmentDate = new Date(targetAppointment.startTime)
 
-  const currentDoctor = doctors.find(doctor => doctor.id === currentDoctorId)
+  const targetDoctor = doctors.find(
+    (d) => d.id === targetAppointment.doctorId
+  )
+
+  if (!targetDoctor) return []
+
+  const scheduledByDoctor = new Map<string, Appointment[]>()
+
+  for (const apt of appointments) {
+    if (apt.status !== SCHEDULED) continue
+
+    if (!scheduledByDoctor.has(apt.doctorId)) {
+      scheduledByDoctor.set(apt.doctorId, [])
+    }
+
+    scheduledByDoctor.get(apt.doctorId)!.push(apt)
+  }
 
   return doctors.filter((doctor) => {
-    if (doctor.id === currentDoctorId) return false
-    if (doctor.specialty !== currentDoctor?.specialty) return false
+    if (doctor.specialty !== targetDoctor.specialty) return false
+
+    if (doctor.id === targetDoctor.id) return false
 
     const availableSlots = doctorAvailabilities[doctor.id]
-    if (!availableSlots) return false
+    if (!availableSlots?.length) return false
 
-    if (!availableSlots.includes(startTime)) return false
-
-    const doctorAppointments = appointments.filter(
-      (apt) =>
-        apt.doctorId === doctor.id &&
-        apt.id !== appointmentId &&
-        apt.status !== SCHEDULED
+    const hasExactSlot = availableSlots.some(
+      (slot) => new Date(slot).getTime() === appointmentDate.getTime()
     )
 
-    const slotResult = calculateTimeSlotAvailability(
-      doctorAppointments,
-      [startTime],
-      new Date(startTime),
-      durationMinutes
-    )[ZERO]
+    if (!hasExactSlot) return false
 
-    return slotResult?.available === true
+    const doctorScheduledAppointments =
+      scheduledByDoctor.get(doctor.id) || []
+
+    const slotCheck = calculateTimeSlotAvailability(
+      doctorScheduledAppointments,
+      [appointmentDate.toISOString()],
+      appointmentDate,
+      targetAppointment.durationMinutes
+    )
+
+    return slotCheck[0]?.available === true
   })
 }

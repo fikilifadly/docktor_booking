@@ -1,0 +1,8 @@
+.modal-reschedule-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  overflow: auto;
+}

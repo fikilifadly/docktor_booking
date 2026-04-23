@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { graphql } from '../lib/api'
 import { useAuth } from '../auth/useAuth'
 
-const CHANGE_APPOINTMENT_MUTATION = `
+const CHANGE_DOCTOR_MUTATION = `
 mutation($id: String!, $newDoc: String!) {
   changeDoctor(id: $id, newDoctorId: $newDoc) {
     ok
@@ -40,12 +40,21 @@ const useChangeDoctor = () => {
         newDoc
       }
 
-      const data = await graphql<{ rescheduleAppointment: { ok: boolean, error?: string } }>(CHANGE_APPOINTMENT_MUTATION, variables, token)
+      const data = await graphql<{
+        changeDoctor: {
+          ok: boolean
+          error?: string
+          appointment?: {
+            id: string
+            doctorId: string
+          }
+        }
+      }>(CHANGE_DOCTOR_MUTATION, variables, token)
 
-      if (data.rescheduleAppointment.ok) {
+      if (data.changeDoctor.ok) {
         return { success: true }
       } else {
-        const errorMessage = data.rescheduleAppointment.error || 'Failed to change doctor'
+        const errorMessage = data.changeDoctor.error || 'Failed to change doctor'
         setError(errorMessage)
         return { success: false, error: errorMessage }
       }

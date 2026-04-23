@@ -1,52 +1,40 @@
-.modal-overlay {
+.modal-change-doctor-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.modal-content {
-  background: #fff;
-  padding: 24px;
-  width: 400px;
-  border-radius: 12px;
+.modal-change-doctor-content {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  background: #fff;
+  padding: 24px;
+  width: 420px;
+  border-radius: 12px;
 }
 
-.current-doctor {
-  font-size: 14px;
-  color: #555;
+.doctor-list {
+  margin-top: 16px;
 }
 
-select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 8px;
-}
-
-.modal-actions {
+.doctor-item {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
 }
 
-.btn-primary {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 8px 16px;
+button {
+  padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
 }
 
-.btn-secondary {
-  background: #e5e7eb;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
+.cancel-btn {
+  margin-top: 16px;
+  background: #ccc;
 }
