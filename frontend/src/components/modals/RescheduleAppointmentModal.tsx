@@ -21,7 +21,6 @@ export default function RescheduleAppointmentModal({ isOpen, onClose, onConfirm,
   const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
   const [selectedTime, setSelectedTime] = useState<string | null>(initialTime);
   const { availability, loading } = useDoctorAvailability(doctorId, selectedDate);
-  console.log("availability", availability);
   const selectedDoctorAppointments = appointments.filter((apt: Appointment) => apt.doctorId === doctorId);
   const slots = calculateTimeSlotAvailability(selectedDoctorAppointments, availability, selectedDate);
 
@@ -31,9 +30,6 @@ export default function RescheduleAppointmentModal({ isOpen, onClose, onConfirm,
     setSelectedTime(initialTime);
   }
 }, [isOpen, initialDate, initialTime]);
-
-  console.log("selectedDate", selectedDate, slots);
-
   if (!isOpen) return null;
 
   return (

@@ -8,6 +8,7 @@ type BookAppointmentParams = {
   doctor: Doctor
   date: Date
   time: string
+  notes: string
 }
 
 type BookAppointmentResult = {
@@ -49,7 +50,8 @@ export function useBookAppointment() {
   const bookAppointment = async ({
     doctor,
     date,
-    time
+    time,
+    notes
   }: BookAppointmentParams): Promise<BookAppointmentResult> => {
     if (!token) {
       return { success: false, error: 'Not authenticated' }
@@ -77,7 +79,7 @@ export function useBookAppointment() {
         doctorId: doctor.id,
         startTime: appointmentDateTime.toISOString(),
         durationMinutes: 60, // Default 1 hour appointment
-        notes: `Appointment with ${doctor.name} (${doctor.specialty})`
+        notes: notes ?? `Appointment with ${doctor.name} (${doctor.specialty})`
       }
 
       const data = await graphql<{

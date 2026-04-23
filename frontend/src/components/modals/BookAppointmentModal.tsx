@@ -206,6 +206,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccessBooked,
           onBack={handleTimeSlotBack}
           selectedDoctor={selectedDoctor}
           onSuccessBooked={onSuccessBooked}
+          showNotes
         />
       )}
     </div>

@@ -1,105 +1,100 @@
-import { useState, useEffect } from 'react'
-import Calendar from '../ui/Calendar'
-import TimeSlotGrid from '../ui/TimeSlotGrid'
-import AppointmentConfirmationModal from './AppointmentConfirmationModal'
-import { useBookAppointment } from '../../hooks/useBookAppointment'
-import { useAppointmentsByDoctor } from '../../hooks/useAppointmentsByDoctor'
-import { calculateTimeSlotAvailability } from '../../lib/timeSlotUtils'
-import './ModalStyles.css'
-import './TimeSlotSelectionModal.css'
-import useDoctorAvailability from '../../hooks/useDoctorAvailability'
+import { useState, useEffect, useRef } from "react";
+import Calendar from "../ui/Calendar";
+import TimeSlotGrid from "../ui/TimeSlotGrid";
+import AppointmentConfirmationModal from "./AppointmentConfirmationModal";
+import { useBookAppointment } from "../../hooks/useBookAppointment";
+import { useAppointmentsByDoctor } from "../../hooks/useAppointmentsByDoctor";
+import { calculateTimeSlotAvailability } from "../../lib/timeSlotUtils";
+import "./ModalStyles.css";
+import "./TimeSlotSelectionModal.css";
+import useDoctorAvailability from "../../hooks/useDoctorAvailability";
 
-import type { Doctor } from '../../types/index.types'
+import type { Doctor } from "../../types/index.types";
 
 type TimeSlotSelectionModalProps = {
-  isOpen: boolean
-  onClose: () => void
-  onBack: () => void
-  selectedDoctor: Doctor
-  onSuccessBooked?: () => void
-}
+  isOpen: boolean;
+  onClose: () => void;
+  onBack: () => void;
+  selectedDoctor: Doctor;
+  onSuccessBooked?: () => void;
+  showNotes: boolean;
+};
 
-export default function TimeSlotSelectionModal({
-  isOpen,
-  onClose,
-  onBack,
-  selectedDoctor,
-  onSuccessBooked,
-}: TimeSlotSelectionModalProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [selectedTime, setSelectedTime] = useState<string | null>(null)
-  const [showConfirmation, setShowConfirmation] = useState(false)
-  const [bookingError, setBookingError] = useState<string>('')
-  const { bookAppointment, loading } = useBookAppointment()
-    
+export default function TimeSlotSelectionModal({ isOpen, onClose, onBack, selectedDoctor, onSuccessBooked, showNotes = false }: TimeSlotSelectionModalProps) {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [bookingError, setBookingError] = useState<string>("");
+  const { bookAppointment, loading } = useBookAppointment();
+  const notesRef = useRef<HTMLTextAreaElement>(null);
+
   // Fetch appointments for the selected doctor and date
-  const { 
-    appointments, 
-    loading: appointmentsLoading, 
-    error: appointmentsError, 
-    refetch
-  } = useAppointmentsByDoctor(selectedDoctor.id, selectedDate)
+  const { appointments, loading: appointmentsLoading, error: appointmentsError, refetch } = useAppointmentsByDoctor(selectedDoctor.id, selectedDate);
 
-  const available = useDoctorAvailability(selectedDoctor.id, selectedDate)
-  
+  const available = useDoctorAvailability(selectedDoctor.id, selectedDate);
+
   // Calculate available time slots
-  const timeSlots = calculateTimeSlotAvailability(appointments, available.availability, selectedDate)
-  
+  const timeSlots = calculateTimeSlotAvailability(appointments, available.availability, selectedDate);
+
   // Reset selected time when date changes
   useEffect(() => {
-    setSelectedTime(null)
-  }, [selectedDate])
+    setSelectedTime(null);
+  }, [selectedDate]);
 
   const handleConfirm = async () => {
     if (selectedDate && selectedTime) {
-      setBookingError('')
+      setBookingError("");
       const result = await bookAppointment({
         doctor: selectedDoctor,
         date: selectedDate,
         time: selectedTime,
-      })
-      
+        notes: notesRef.current?.value || "",
+      });
+
       if (result.success) {
-        onSuccessBooked?.()
-        setShowConfirmation(true)
+        onSuccessBooked?.();
+        setShowConfirmation(true);
       } else {
-        setBookingError(result.error || 'Failed to book appointment')
+        setBookingError(result.error || "Failed to book appointment");
       }
     }
-  }
+  };
 
   const handleConfirmationClose = () => {
-    setShowConfirmation(false)
-    setSelectedDate(null)
-    setSelectedTime(null)
-    refetch()
-    onClose() // This will close the TimeSlotSelectionModal
+    setShowConfirmation(false);
+    setSelectedDate(null);
+    setSelectedTime(null);
+    refetch();
+    onClose(); // This will close the TimeSlotSelectionModal
     // The parent BookAppointmentModal will also close via its handleTimeSlotConfirm
-  }
+  };
 
   const handleClose = () => {
-    setSelectedDate(null)
-    setSelectedTime(null)
-    onClose()
-  }
+    setSelectedDate(null);
+    setSelectedTime(null);
+    onClose();
+  };
 
   const handleBack = () => {
-    setSelectedDate(null)
-    setSelectedTime(null)
-    onBack()
-  }
+    setSelectedDate(null);
+    setSelectedTime(null);
+    onBack();
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
-      <div className={`modal-container time-slot-modal ${showConfirmation ? 'hidden' : ''}`}>
+      <div className={`modal-container time-slot-modal ${showConfirmation ? "hidden" : ""}`}>
         <div className="modal-header">
           <div className="modal-header-content">
             <h2 className="modal-title">New Appointment</h2>
             <p className="modal-subtitle">Step 2 of 2: Choose date & time</p>
           </div>
-          <button className="modal-close" onClick={handleClose}>
+          <button
+            className="modal-close"
+            onClick={handleClose}
+          >
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
@@ -109,8 +104,8 @@ export default function TimeSlotSelectionModal({
           <div className="doctor-info-section">
             <div className="doctor-avatar">
               {selectedDoctor.avatarUrl ? (
-                <img 
-                  src={selectedDoctor.avatarUrl} 
+                <img
+                  src={selectedDoctor.avatarUrl}
                   alt={selectedDoctor.name}
                   className="doctor-image"
                 />
@@ -131,10 +126,10 @@ export default function TimeSlotSelectionModal({
             <div className="error-message">
               <span className="material-symbols-outlined">error</span>
               Unable to load appointment availability. Please try again.
-              <button 
+              <button
                 onClick={refetch}
                 className="retry-button"
-                style={{ marginLeft: '8px', background: 'none', border: 'none', color: 'inherit', textDecoration: 'underline', cursor: 'pointer' }}
+                style={{ marginLeft: "8px", background: "none", border: "none", color: "inherit", textDecoration: "underline", cursor: "pointer" }}
               >
                 Retry
               </button>
@@ -150,23 +145,35 @@ export default function TimeSlotSelectionModal({
                 onDateSelect={setSelectedDate}
               />
             </div>
-            
-            {selectedDate && <div className="time-selection">
-              <h4 className="section-title">Choose a Time</h4>
-              {appointmentsLoading ? (
-                <div className="loading-message">
-                  <span className="material-symbols-outlined">schedule</span>
-                  Loading available times...
-                </div>
-              ) : (
-                <TimeSlotGrid
-                  selectedTime={selectedTime}
-                  onTimeSelect={setSelectedTime}
-                  slots={timeSlots}
-                />
-              )}
-            </div>}
+
+            {selectedDate && (
+              <div className="time-selection">
+                <h4 className="section-title">Choose a Time</h4>
+                {appointmentsLoading ? (
+                  <div className="loading-message">
+                    <span className="material-symbols-outlined">schedule</span>
+                    Loading available times...
+                  </div>
+                ) : (
+                  <TimeSlotGrid
+                    selectedTime={selectedTime}
+                    onTimeSelect={setSelectedTime}
+                    slots={timeSlots}
+                  />
+                )}
+              </div>
+            )}
           </div>
+          {showNotes && (
+            <div className="notes-section">
+              <h3>Notes</h3>
+              <p className="notes-description">please describe your symptoms</p>
+              <textarea
+                className="notes-textarea"
+                ref={notesRef}
+              />
+            </div>
+          )}
         </div>
 
         {bookingError && (
@@ -177,15 +184,19 @@ export default function TimeSlotSelectionModal({
         )}
 
         <div className="modal-footer">
-          <button className="btn-back" onClick={handleBack} disabled={loading || appointmentsLoading}>
+          <button
+            className="btn-back"
+            onClick={handleBack}
+            disabled={loading || appointmentsLoading}
+          >
             Back
           </button>
-          <button 
-            className="btn-confirm" 
+          <button
+            className="btn-confirm"
             onClick={handleConfirm}
             disabled={!selectedDate || !selectedTime || loading || appointmentsLoading || !!appointmentsError}
           >
-            {loading ? 'Booking...' : appointmentsLoading ? 'Loading...' : 'Create Appointment'}
+            {loading ? "Booking..." : appointmentsLoading ? "Loading..." : "Create Appointment"}
           </button>
         </div>
       </div>
@@ -201,5 +212,5 @@ export default function TimeSlotSelectionModal({
         />
       )}
     </div>
-  )
+  );
 }
