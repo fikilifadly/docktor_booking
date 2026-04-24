@@ -56,6 +56,7 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccessBooked,
       setSelectedSpecialty('')
       setSelectedDoctor(null)
       setShowTimeSlotModal(false)
+      setShowCalendar(false)
     }
   }, [isOpen])
 

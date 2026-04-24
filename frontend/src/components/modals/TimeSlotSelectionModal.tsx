@@ -17,7 +17,7 @@ type TimeSlotSelectionModalProps = {
   onBack: () => void;
   selectedDoctor: Doctor;
   onSuccessBooked?: () => void;
-  showNotes: boolean;
+  showNotes?: boolean;
 };
 
 export default function TimeSlotSelectionModal({ isOpen, onClose, onBack, selectedDoctor, onSuccessBooked, showNotes = false }: TimeSlotSelectionModalProps) {

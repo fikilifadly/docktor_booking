@@ -73,7 +73,11 @@ describe("AppointmentsPage", () => {
     render(<AppointmentsPage />);
 
     const cancelBtn = screen.getByText("Cancel");
+
     fireEvent.click(cancelBtn);
+
+    const confirmBtn = await screen.findByRole("button", { name: /confirm/i });
+    fireEvent.click(confirmBtn);
 
     await waitFor(() => {
       expect(mockCancelAppointment).toHaveBeenCalledWith("appt-1");
@@ -82,17 +86,25 @@ describe("AppointmentsPage", () => {
   });
 
   it("does not call refetch when cancellation fails", async () => {
-    mockCancelAppointment.mockResolvedValue({ success: false, error: "Server error" });
-    vi.spyOn(window, "alert").mockImplementation(() => {});
+    mockCancelAppointment.mockResolvedValue({
+      success: false,
+      error: "Server error",
+    });
 
-    render(<AppointmentsPage />);
+    const { container } = render(<AppointmentsPage />);
 
-    fireEvent.click(screen.getByText("Cancel"));
+    const cancelBtn = container.querySelector(".btn-cancel-appointment");
+    fireEvent.click(cancelBtn!);
+
+    expect(screen.getByText(/are you sure/i)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /confirm/i }));
 
     await waitFor(() => {
       expect(mockCancelAppointment).toHaveBeenCalled();
-      expect(mockRefetch).not.toHaveBeenCalled();
     });
+
+    expect(mockRefetch).not.toHaveBeenCalled();
   });
 
   // FE-006: logout must show a confirmation dialog before logging out
@@ -100,9 +112,9 @@ describe("AppointmentsPage", () => {
     render(<AppointmentsPage />);
 
     fireEvent.click(screen.getByText("Logout"));
-    
-    const modalTitle = screen.getByText("Confirm Logout");
-    
+
+    const modalTitle = screen.getByText("Confirm");
+
     expect(modalTitle).toBeInTheDocument();
   });
 
@@ -121,10 +133,12 @@ describe("AppointmentsPage", () => {
     render(<AppointmentsPage />);
 
     fireEvent.click(screen.getByText("Logout"));
-    const modal = screen.getByText(/Are you sure you want to log out/i).closest('.modal-logout-container')
 
-    const modalCancelBtn = within(modal as HTMLElement).getByRole('button', { name: /cancel/i })  
-    fireEvent.click(modalCancelBtn)
+    const modal = screen.getByText(/are you sure/i).closest(".modal-confirm-container") as HTMLElement;
+
+    const cancelBtn = within(modal).getByRole("button", { name: /cancel/i });
+
+    fireEvent.click(cancelBtn);
 
     expect(mockLogout).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalledWith("/login");

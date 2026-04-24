@@ -1,45 +1,54 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '../../test/utils'
-import TimeSlotSelectionModal from '../modals/TimeSlotSelectionModal'
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "../../test/utils";
+import TimeSlotSelectionModal from "../modals/TimeSlotSelectionModal";
 
 // Mock the current time to be 10:00 AM so time slots are available
-const mockDate = new Date()
-vi.setSystemTime(mockDate)
+const mockDate = new Date();
+vi.setSystemTime(mockDate);
 
 // Mock the useBookAppointment hook
-const mockBookAppointment = vi.fn()
-vi.mock('../../hooks/useBookAppointment', () => ({
+const mockBookAppointment = vi.fn();
+vi.mock("../../hooks/useBookAppointment", () => ({
   useBookAppointment: () => ({
     bookAppointment: mockBookAppointment,
     loading: false,
-    error: ''
-  })
-}))
+    error: "",
+  }),
+}));
+vi.mock("../../lib/timeSlotUtils", () => ({
+  calculateTimeSlotAvailability: () => [
+    { time: "11:00 AM", available: true },
+    { time: "12:00 PM", available: true },
+  ],
+}));
 
 // Mock the useAppointmentsByDoctor hook
-vi.mock('../../hooks/useAppointmentsByDoctor', () => ({
+vi.mock("../../hooks/useAppointmentsByDoctor", () => ({
   useAppointmentsByDoctor: () => ({
     appointments: [],
     loading: false,
     error: null,
-    refetch: vi.fn()
-  })
-}))
+    refetch: vi.fn(),
+  }),
+}));
 
 const mockDoctor = {
-  id: 'doctor-1',
-  name: 'Dr. Amelia Chen',
-  specialty: 'Internal Medicine',
-  avatarUrl: 'https://example.com/doctor1.jpg'
-}
+  id: "doctor-1",
+  name: "Dr. Amelia Chen",
+  specialty: "Internal Medicine",
+  avatarUrl: "https://example.com/doctor1.jpg",
+};
 
-describe('Booking Flow Integration', () => {
+describe("Booking Flow Integration", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  it('should complete the booking flow successfully', async () => {
-    mockBookAppointment.mockResolvedValue({ success: true, appointmentId: 'appointment-1' })
+  it("should complete the booking flow successfully", async () => {
+    mockBookAppointment.mockResolvedValue({
+      success: true,
+      appointmentId: "appointment-1",
+    });
 
     render(
       <TimeSlotSelectionModal
@@ -47,51 +56,45 @@ describe('Booking Flow Integration', () => {
         onClose={vi.fn()}
         onBack={vi.fn()}
         selectedDoctor={mockDoctor}
-      />
-    )
+      />,
+    );
 
-    // Check that the modal is open
-    expect(screen.getByText('New Appointment')).toBeInTheDocument()
-    expect(screen.getByText('Step 2 of 2: Choose date & time')).toBeInTheDocument()
+    expect(screen.getByText("New Appointment")).toBeInTheDocument();
+    expect(screen.getByText("Step 2 of 2: Choose date & time")).toBeInTheDocument();
+    expect(screen.getByText("Dr. Amelia Chen")).toBeInTheDocument();
+    expect(screen.getByText("Internal Medicine")).toBeInTheDocument();
+    expect(screen.getByText("Select a Date")).toBeInTheDocument();
+    expect(screen.queryByText("Choose a Time")).not.toBeInTheDocument();
 
-    // Check doctor information is displayed
-    expect(screen.getByText('Dr. Amelia Chen')).toBeInTheDocument()
-    expect(screen.getByText('Internal Medicine')).toBeInTheDocument()
+    fireEvent.click(screen.getByText("27"));
 
-    // Check that calendar and time slots are rendered
-    expect(screen.getByText('Select a Date')).toBeInTheDocument()
-    expect(screen.getByText('Choose a Time')).toBeInTheDocument()
+    expect(await screen.findByText("Choose a Time")).toBeInTheDocument();
 
-    // Select tomorrow's date (27th) which should be available
-    const tomorrowButton = screen.getByText('27')
-    fireEvent.click(tomorrowButton)
+    fireEvent.click(await screen.findByText("11:00 AM"));
 
-    // Select a time slot (use 11:00 AM which should be available at 10:00 AM)
-    const timeSlot = screen.getByText('11:00 AM')
-    fireEvent.click(timeSlot)
+    const confirmButton = screen.getByRole("button", {
+      name: /create appointment/i,
+    });
 
-    // Now the confirm button should be enabled
-    const confirmButton = screen.getByText('Create Appointment')
-    expect(confirmButton).not.toBeDisabled()
+    expect(confirmButton).not.toBeDisabled();
 
-    // Click confirm button
-    fireEvent.click(confirmButton)
+    fireEvent.click(confirmButton);
 
-    // Wait for the booking to complete
     await waitFor(() => {
       expect(mockBookAppointment).toHaveBeenCalledWith({
         doctor: mockDoctor,
         date: expect.any(Date),
-        time: '11:00 AM'
-      })
-    })
-  })
+        time: "11:00 AM",
+        notes: "",
+      });
+    });
+  });
 
-  it('should handle booking errors', async () => {
-    mockBookAppointment.mockResolvedValue({ 
-      success: false, 
-      error: 'Slot already booked for this doctor' 
-    })
+  it("should handle booking errors", async () => {
+    mockBookAppointment.mockResolvedValue({
+      success: false,
+      error: "Slot already booked for this doctor",
+    });
 
     render(
       <TimeSlotSelectionModal
@@ -99,59 +102,78 @@ describe('Booking Flow Integration', () => {
         onClose={vi.fn()}
         onBack={vi.fn()}
         selectedDoctor={mockDoctor}
-      />
-    )
+      />,
+    );
 
     // Select tomorrow's date (27th) which should be available
-    const tomorrowButton = screen.getByText('27')
-    fireEvent.click(tomorrowButton)
-    
-    const timeSlot = screen.getByText('11:00 AM')
-    fireEvent.click(timeSlot)
+    const tomorrowButton = screen.getByText("27");
+    fireEvent.click(tomorrowButton);
+
+    const timeSlot = screen.getByText("11:00 AM");
+    fireEvent.click(timeSlot);
 
     // Click confirm button
-    const confirmButton = screen.getByText('Create Appointment')
-    fireEvent.click(confirmButton)
+    const confirmButton = screen.getByText("Create Appointment");
+    fireEvent.click(confirmButton);
 
     // Wait for the error to appear
     await waitFor(() => {
-      expect(screen.getByText('Slot already booked for this doctor')).toBeInTheDocument()
-    })
-  })
+      expect(screen.getByText("Slot already booked for this doctor")).toBeInTheDocument();
+    });
+  });
 
-  it('should disable confirm button when no date or time is selected', () => {
+  it("should disable confirm button when no date or time is selected", () => {
     render(
       <TimeSlotSelectionModal
         isOpen={true}
         onClose={vi.fn()}
         onBack={vi.fn()}
         selectedDoctor={mockDoctor}
-      />
-    )
+      />,
+    );
 
-    const confirmButton = screen.getByText('Create Appointment')
-    expect(confirmButton).toBeDisabled()
-  })
+    const confirmButton = screen.getByText("Create Appointment");
+    expect(confirmButton).toBeDisabled();
+  });
 
-  it('should enable confirm button when both date and time are selected', () => {
+  it("should complete booking flow and call callbacks after confirmation close", async () => {
+    const mockOnClose = vi.fn();
+    const mockOnSuccessBooked = vi.fn();
+
+    mockBookAppointment.mockResolvedValue({
+      success: true,
+      appointmentId: "appointment-1",
+    });
+
     render(
       <TimeSlotSelectionModal
         isOpen={true}
-        onClose={vi.fn()}
+        onClose={mockOnClose}
         onBack={vi.fn()}
         selectedDoctor={mockDoctor}
-      />
-    )
+        onSuccessBooked={mockOnSuccessBooked}
+      />,
+    );
 
-    // Select tomorrow's date (27th) which should be available
-    const tomorrowButton = screen.getByText('27')
-    fireEvent.click(tomorrowButton)
+    fireEvent.click(screen.getByText("27"));
+    const timeSlot = await screen.findByRole("button", {
+      name: /11:00 AM/i,
+    });
+    fireEvent.click(timeSlot);
+    fireEvent.click(screen.getByRole("button", { name: /create appointment/i }));
 
-    // Select a time slot (use 11:00 AM which should be available at 10:00 AM)
-    const timeSlot = screen.getByText('11:00 AM')
-    fireEvent.click(timeSlot)
+    await waitFor(() => {
+      expect(mockBookAppointment).toHaveBeenCalled();
+    });
 
-    const confirmButton = screen.getByText('Create Appointment')
-    expect(confirmButton).not.toBeDisabled()
-  })
-})
+    const confirmationTitle = await screen.findByText(/appointment confirmed/i);
+    expect(confirmationTitle).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /done/i }));
+
+    await waitFor(() => {
+      expect(mockOnSuccessBooked).toHaveBeenCalled();
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+  });
+});

@@ -253,6 +253,7 @@ const _handleOnConfirmActionModal = (
 
         if (result.success) {
           toast.success(CONFIRMATION_TYPE.CANCEL.toastSuccess)
+          refetch()
         } else {
           toast.error(CONFIRMATION_TYPE.CANCEL.toastError)
         }
@@ -270,6 +271,7 @@ const _handleOnConfirmActionModal = (
 
         if (result.success) {
           toast.success(CONFIRMATION_TYPE.CHANGE_DOCTOR.toastSuccess)
+          refetch()
         } else {
           toast.error(CONFIRMATION_TYPE.CHANGE_DOCTOR.toastError)
         }
@@ -293,6 +295,7 @@ const _handleOnConfirmActionModal = (
 
         if (result.success) {
           toast.success(CONFIRMATION_TYPE.RESCHEDULE.toastSuccess)
+          refetch()
         } else {
           toast.error(CONFIRMATION_TYPE.RESCHEDULE.toastError)
         }
@@ -317,7 +320,6 @@ const _handleOnConfirmActionModal = (
     }
   } finally {
     setConfirmationStateModal(null)
-    refetch()
   }
 }
 

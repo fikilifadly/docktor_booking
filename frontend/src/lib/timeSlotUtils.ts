@@ -1,6 +1,9 @@
 import Constants from "../constants"
 
-const { NUMBERS: { ZERO, ONE} } = Constants
+const { 
+  NUMBERS: { ZERO, ONE},
+  STATUS_APPOINTMENT: { SCHEDULED },
+} = Constants
 
 export type Appointment = {
   id: string
@@ -83,7 +86,7 @@ function isTimeSlotBooked(
     slotStart.getTime() + appointmentDurationMinutes * 60000
   )
 
-  return slotStart < appointmentEnd && slotEnd > appointmentStart
+  return (slotStart < appointmentEnd && slotEnd > appointmentStart) && appointment.status === SCHEDULED 
 }
 
 /**
