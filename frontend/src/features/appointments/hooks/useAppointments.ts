@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { graphql } from '../../../lib/api'
 import { useAuth } from '../../../auth/useAuth'
+import { Query} from '../../../graphql'
 
 type Appointment = {
   id: string
@@ -13,8 +14,6 @@ type Appointment = {
   updatedAt: string
 }
 
-const QUERY = `query { appointmentsByPatient { id doctorId startTime durationMinutes status notes createdAt updatedAt } }`
-
 export function useAppointments() {
   const { token } = useAuth()
   const [loading, setLoading] = useState(false)
@@ -25,7 +24,7 @@ export function useAppointments() {
     setLoading(true)
     setError('')
     try {
-      const data = await graphql<{ appointmentsByPatient: Appointment[] }>(QUERY, undefined, token || undefined)
+      const data = await graphql<{ appointmentsByPatient: Appointment[] }>(Query.APPOINTMENTS_BY_PATIENT_QUERY, undefined, token || undefined)
       setAppointments(data.appointmentsByPatient || [])
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load appointments'

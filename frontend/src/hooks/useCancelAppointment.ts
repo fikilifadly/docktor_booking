@@ -1,20 +1,12 @@
 import { useState } from 'react'
 import { graphql } from '../lib/api'
 import { useAuth } from '../auth/useAuth'
+import { Mutation } from '../graphql'
 
 type CancelAppointmentResult = {
   success: boolean
   error?: string
 }
-
-const CANCEL_APPOINTMENT_MUTATION = `
-  mutation CancelAppointment($id: String!) {
-    cancelAppointment(id: $id) {
-      ok
-      error
-    }
-  }
-`
 
 export function useCancelAppointment() {
   const { token } = useAuth()
@@ -39,7 +31,7 @@ export function useCancelAppointment() {
           ok: boolean
           error?: string
         }
-      }>(CANCEL_APPOINTMENT_MUTATION, variables, token)
+      }>(Mutation.CANCEL_APPOINTMENT_MUTATION, variables, token)
 
       if (data.cancelAppointment.ok) {
         return { success: true }

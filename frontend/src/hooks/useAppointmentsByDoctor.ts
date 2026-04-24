@@ -1,18 +1,9 @@
 import { useState, useEffect } from 'react'
 import { graphql } from '../lib/api'
 import { useAuth } from '../auth/useAuth'
-import type { Appointment } from '../lib/timeSlotUtils'
+import { Query } from '../graphql'
 
-const APPOINTMENTS_BY_DOCTOR_QUERY = `
-  query AppointmentsByDoctor($doctorId: String!, $date: DateTime!) {
-    appointmentsByDoctor(doctorId: $doctorId, date: $date) {
-      id
-      startTime
-      durationMinutes
-      status
-    }
-  }
-`
+import type { Appointment } from '../lib/timeSlotUtils'
 
 type UseAppointmentsByDoctorResult = {
   appointments: Appointment[]
@@ -50,7 +41,7 @@ export function useAppointmentsByDoctor(
       const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0))
       
       const data = await graphql<{ appointmentsByDoctor: Appointment[] }>(
-        APPOINTMENTS_BY_DOCTOR_QUERY,
+        Query.APPOINTMENTS_BY_DOCTOR_QUERY,
         {
           doctorId,
           date: utcDate.toISOString()

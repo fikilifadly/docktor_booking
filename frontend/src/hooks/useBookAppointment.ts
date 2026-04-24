@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { graphql } from '../lib/api'
 import { useAuth } from '../auth/useAuth'
+import { Mutation } from '../graphql'
 
 import type { Doctor } from '../types/index.types'
 
@@ -17,30 +18,6 @@ type BookAppointmentResult = {
   error?: string
 }
 
-const CREATE_APPOINTMENT_MUTATION = `
-  mutation CreateAppointment($doctorId: String!, $startTime: DateTime!, $durationMinutes: Int, $notes: String) {
-    createAppointment(
-      doctorId: $doctorId
-      startTime: $startTime
-      durationMinutes: $durationMinutes
-      notes: $notes
-    ) {
-      ok
-      error
-      appointment {
-        id
-        patientId
-        doctorId
-        startTime
-        durationMinutes
-        status
-        notes
-        createdAt
-        updatedAt
-      }
-    }
-  }
-`
 
 export function useBookAppointment() {
   const { token } = useAuth()
@@ -99,7 +76,7 @@ export function useBookAppointment() {
             updatedAt: string
           }
         }
-      }>(CREATE_APPOINTMENT_MUTATION, variables, token)
+      }>(Mutation.CREATE_APPOINTMENT_MUTATION, variables, token)
 
       if (data.createAppointment.ok && data.createAppointment.appointment) {
         return {

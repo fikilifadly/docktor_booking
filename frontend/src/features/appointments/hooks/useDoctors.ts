@@ -1,17 +1,9 @@
 import { useEffect, useState } from 'react'
 import { graphql } from '../../../lib/api'
 import { useAuth } from '../../../auth/useAuth'
+import { Query} from '../../../graphql'
 
 import type { Doctor } from '../../../types/index.types'
-
-const QUERY = `query Doctors($q: String, $specialty: String) { 
-  doctors(q: $q, specialty: $specialty) { 
-    id 
-    name 
-    specialty 
-    avatarUrl 
-  } 
-}`
 
 export function useDoctors(q?: string, specialty?: string) {
   const { token } = useAuth()
@@ -24,7 +16,7 @@ export function useDoctors(q?: string, specialty?: string) {
     setError('')
     try {
       const data = await graphql<{ doctors: Doctor[] }>(
-        QUERY, 
+        Query.DOCTORS_QUERY, 
         { q: q || null, specialty: specialty || null }, 
         token || undefined
       )

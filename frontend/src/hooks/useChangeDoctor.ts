@@ -1,27 +1,17 @@
 import { useState } from 'react'
 import { graphql } from '../lib/api'
 import { useAuth } from '../auth/useAuth'
-import type { ChangeDoctorResult } from '../types/index.types'
+import { Mutation } from '../graphql'
 
-const CHANGE_DOCTOR_MUTATION = `
-mutation($id: String!, $newDoc: String!) {
-  changeDoctor(id: $id, newDoctorId: $newDoc) {
-    ok
-    error
-    appointment {
-      id
-      doctorId
-    }
-  }
-}
-`
+import type { MutationResult } from '../types/index.types'
+
 
 const useChangeDoctor = () => {
   const { token } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('')
 
-  const changeDoctor = async (appointmentId: string, newDoc: string): Promise<ChangeDoctorResult> => {
+  const changeDoctor = async (appointmentId: string, newDoc: string): Promise<MutationResult> => {
     if (!token) {
       setError('Not authenticated')
       return { success: false, error: 'Not authenticated' }
@@ -45,7 +35,7 @@ const useChangeDoctor = () => {
             doctorId: string
           }
         }
-      }>(CHANGE_DOCTOR_MUTATION, variables, token)
+      }>(Mutation.CHANGE_DOCTOR_MUTATION, variables, token)
 
       if (data.changeDoctor.ok) {
         return { success: true }
