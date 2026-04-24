@@ -24,6 +24,23 @@ export const splitDateUtc = (date: Date): { splitDate: Date; splitTime: string }
   return { splitDate, splitTime }
 }
 
+export const formatDateTime = (dateTimeString: string) => {
+  const date = new Date(dateTimeString);
+
+  return {
+    date: date.toLocaleDateString([], {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }),
+    time: date.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }),
+  };
+};
+
 export function combineDateAndTime(
   date: Date,
   timeString: string

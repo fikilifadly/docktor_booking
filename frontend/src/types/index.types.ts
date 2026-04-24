@@ -1,3 +1,5 @@
+export type BooleanVoidFunc = (value: boolean) => void
+
 export type Doctor = {
   id: string
   name: string

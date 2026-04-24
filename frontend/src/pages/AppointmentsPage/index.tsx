@@ -1,21 +1,13 @@
 import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAppointments } from "../../features/appointments/hooks/useAppointments";
-import { useDoctors } from "../../features/appointments/hooks/useDoctors";
-import { useCancelAppointment } from "../../hooks/useCancelAppointment";
 import { BookAppointmentModal } from "../../components";
 import { PageLayout, PageContainer } from "../../components/layout";
-import { useAuth } from "../../auth/useAuth";
 import "./styles.css";
 import ConfirmationModal from "../../components/modals/ConfirmationModal";
-import type { ConfirmationType } from "./AppointmentsPage.config";
 import { CONFIRMATION_TYPE } from "./AppointmentsPage.config";
 import { toast } from "react-toastify";
 import { getConfirmationTitleMessage } from "./AppointmentPage.utils";
 import Constants from "../../constants";
-import useChangeDoctor from "../../hooks/useChangeDoctor";
 import ChangeDoctorModal from "../../components/modals/ChangeDoctorModal";
-import useRescheduleAppointment from "../../hooks/useRescheduleAppointment";
 import RescheduleAppointmentModal from "../../components/modals/RescheduleAppointmentModal";
 import { splitDateUtc, combineDateAndTime } from "../../lib/timeSlotUtils";
 
@@ -25,16 +17,16 @@ const {
 } = Constants;
 
 export default function AppointmentsPage() {
-  const { loading, error, appointments, refetch } = useAppointments();
-  const { doctors } = useDoctors();
-  const { cancelAppointment, loading: cancelLoading } = useCancelAppointment();
-  const { logout } = useAuth();
-  const { changeDoctor, loading: changeLoading } = useChangeDoctor();
-  const { rescheduleAppointment } = useRescheduleAppointment();
-  const navigate = useNavigate();
+  // const { loading, error, appointments, refetch } = useAppointments();
+  // const { doctors } = useDoctors();
+  // const { cancelAppointment, loading: cancelLoading } = useCancelAppointment();
+  // const { logout } = useAuth();
+  // const { changeDoctor, loading: changeLoading } = useChangeDoctor();
+  // const { rescheduleAppointment } = useRescheduleAppointment();
+  // const navigate = useNavigate();
 
-  const [isChangeDoctorOpen, setIsChangeDoctorOpen] = useState(false);
-  const [isModalRescheduleOpen, setIsModalRescheduleOpen] = useState(false);
+  // const [isChangeDoctorOpen, setIsChangeDoctorOpen] = useState(false);
+  // const [isModalRescheduleOpen, setIsModalRescheduleOpen] = useState(false);
 
   const { upcoming, pasts, cancellations } = useMemo(() => {
     const now = new Date();
@@ -58,30 +50,34 @@ export default function AppointmentsPage() {
       }
     });
 
-    return { upcoming, pasts, cancellations };
+    const hasUpcomingAppointments = upcoming.length > ZERO;
+    const hasPastAppointments = pasts.length > ZERO;
+    const hasCancelledAppointments = cancellations.length > ZERO;
+
+    return { upcoming, pasts, cancellations, hasUpcomingAppointments, hasPastAppointments, hasCancelledAppointments };
   }, [appointments]);
 
-  const [selectedAppointment, setSelectedAppointment] = useState<{
-    id: string;
-    doctorId?: string;
-    doctorName?: string;
-    speciality?: string;
-    startTime: string;
-    startDate?: Date;
-  } | null>(null);
+  // const [selectedAppointment, setSelectedAppointment] = useState<{
+  //   id: string;
+  //   doctorId?: string;
+  //   doctorName?: string;
+  //   speciality?: string;
+  //   startTime: string;
+  //   startDate?: Date;
+  // } | null>(null);
 
-  const [pendingDoctorChange, setPendingDoctorChange] = useState<{
-    appointmentId: string;
-    newDoctorId: string;
-    prevDoctorName: string;
-    newDoctorName: string;
-  } | null>(null);
+  // const [pendingDoctorChange, setPendingDoctorChange] = useState<{
+  //   appointmentId: string;
+  //   newDoctorId: string;
+  //   prevDoctorName: string;
+  //   newDoctorName: string;
+  // } | null>(null);
 
-  const [pendingReschedule, setPendingReschedule] = useState<{
-    appointmentId: string;
-    newDate: Date;
-    newTime: string;
-  } | null>(null);
+  // const [pendingReschedule, setPendingReschedule] = useState<{
+  //   appointmentId: string;
+  //   newDate: Date;
+  //   newTime: string;
+  // } | null>(null);
 
   const handleConfirmReschedule = (appointmentId: string, newDate: Date, newTime: string) => {
     setPendingReschedule({
@@ -101,16 +97,13 @@ export default function AppointmentsPage() {
     });
   };
 
-  const [confirmationStateModal, setConfirmationStateModal] = useState<{
-    isOpen: boolean;
-    type: ConfirmationType | null;
-    appointmentId?: string;
-    prevState?: string;
-    newState?: string;
-  }>({
-    isOpen: false,
-    type: null,
-  });
+  // const [confirmationStateModal, setConfirmationStateModal] = useState<{
+  //   isOpen: boolean;
+  //   type: ConfirmationType | null;
+  //   appointmentId?: string;
+  //   prevState?: string;
+  //   newState?: string;
+  // } | null>(null);
 
   const handleOpenConfirmationModal =
     (type: ConfirmationType, appointmentId: string, prevState: string = "", newState: string = "") =>
@@ -235,10 +228,6 @@ export default function AppointmentsPage() {
 
   const [isModalAppointmentOpen, setisModalAppointmentOpen] = useState(false);
   const [showCancelled, setShowCancelled] = useState(false);
-
-  const hasUpcomingAppointments = upcoming.length > ZERO;
-  const hasPastAppointments = pasts.length > ZERO;
-  const hasCancelledAppointments = cancellations.length > ZERO;
 
   // Create a mapping from doctorId to doctor information
   const doctorMap = useMemo(() => {
@@ -424,27 +413,28 @@ export default function AppointmentsPage() {
                 </button>
                 <div className="appointments-container">
                   <div className="appointments-list">
-                    {cancellations.map((cancelled) => {
-                      const { date, time } = formatDateTime(cancelled.startTime);
-                      const doctor = doctorMap.get(cancelled.doctorId);
+                    {showCancelled &&
+                      cancellations.map((cancelled) => {
+                        const { date, time } = formatDateTime(cancelled.startTime);
+                        const doctor = doctorMap.get(cancelled.doctorId);
 
-                      return (
-                        <div
-                          key={cancelled.id}
-                          className="appointment-row cancelled"
-                        >
-                          <div className="appointment-doctor-info">
-                            <p className="doctor-name">{doctor?.name || `Dr. ${cancelled.doctorId}`}</p>
-                            <p className="doctor-specialty">{doctor?.specialty || "General Practice"}</p>
+                        return (
+                          <div
+                            key={cancelled.id}
+                            className="appointment-row cancelled"
+                          >
+                            <div className="appointment-doctor-info">
+                              <p className="doctor-name">{doctor?.name || `Dr. ${cancelled.doctorId}`}</p>
+                              <p className="doctor-specialty">{doctor?.specialty || "General Practice"}</p>
+                            </div>
+                            <div className="appointment-datetime">
+                              <p className="appointment-date">{date}</p>
+                              <p className="appointment-time">{time}</p>
+                            </div>
+                            <div className="appointment-actions">{/* No action button for cancelled appointments */}</div>
                           </div>
-                          <div className="appointment-datetime">
-                            <p className="appointment-date">{date}</p>
-                            <p className="appointment-time">{time}</p>
-                          </div>
-                          <div className="appointment-actions">{/* No action button for cancelled appointments */}</div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
                   </div>
                 </div>
               </div>
@@ -454,38 +444,39 @@ export default function AppointmentsPage() {
               <div className="appointments-section cancelled-appointments-section">
                 <button
                   className="section-toggle"
-                  onClick={() => setShowCancelled(!showCancelled)}
+                  onClick={() => setShowPasts(!showPasts)}
                 >
                   <h2 className="section-title">Past Appointments ({appointments.filter((apt) => apt.status === CANCELLED).length})</h2>
                   <span className={`toggle-icon ${showCancelled ? "expanded" : ""}`}>
                     <span className="material-symbols-outlined">expand_more</span>
                   </span>
                 </button>
-                  <div className="appointments-container">
-                    <div className="appointments-list">
-                      {pasts.map((pasts) => {
-                          const { date, time } = formatDateTime(pasts.startTime);
-                          const doctor = doctorMap.get(pasts.doctorId);
+                <div className="appointments-container">
+                  <div className="appointments-list">
+                    {showPasts &&
+                      pasts.map((pasts) => {
+                        const { date, time } = formatDateTime(pasts.startTime);
+                        const doctor = doctorMap.get(pasts.doctorId);
 
-                          return (
-                            <div
-                              key={pasts.id}
-                              className="appointment-row cancelled"
-                            >
-                              <div className="appointment-doctor-info">
-                                <p className="doctor-name">{doctor?.name || `Dr. ${pasts.doctorId}`}</p>
-                                <p className="doctor-specialty">{doctor?.specialty || "General Practice"}</p>
-                              </div>
-                              <div className="appointment-datetime">
-                                <p className="appointment-date">{date}</p>
-                                <p className="appointment-time">{time}</p>
-                              </div>
-                              <div className="appointment-actions">{/* No action button for cancelled appointments */}</div>
+                        return (
+                          <div
+                            key={pasts.id}
+                            className="appointment-row cancelled"
+                          >
+                            <div className="appointment-doctor-info">
+                              <p className="doctor-name">{doctor?.name || `Dr. ${pasts.doctorId}`}</p>
+                              <p className="doctor-specialty">{doctor?.specialty || "General Practice"}</p>
                             </div>
-                          );
-                        })}
-                    </div>
+                            <div className="appointment-datetime">
+                              <p className="appointment-date">{date}</p>
+                              <p className="appointment-time">{time}</p>
+                            </div>
+                            <div className="appointment-actions">{/* No action button for cancelled appointments */}</div>
+                          </div>
+                        );
+                      })}
                   </div>
+                </div>
               </div>
             )}
           </div>

@@ -22,10 +22,3 @@ export const CONFIRMATION_TYPE = {
     toastError: 'Failed to reschedule appointment. Please try again.',
   }
 }
-
-
-export type ConfirmationType = typeof CONFIRMATION_TYPE[keyof typeof CONFIRMATION_TYPE]['type']
-export type ConfirmationTitleMessage = {
-  title: string
-  message: string
-}
