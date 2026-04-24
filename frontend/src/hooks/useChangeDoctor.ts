@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { graphql } from '../lib/api'
 import { useAuth } from '../auth/useAuth'
+import type { ChangeDoctorResult } from '../types/index.types'
 
 const CHANGE_DOCTOR_MUTATION = `
 mutation($id: String!, $newDoc: String!) {
@@ -14,11 +15,6 @@ mutation($id: String!, $newDoc: String!) {
   }
 }
 `
-
-type ChangeDoctorResult = {
-  success: boolean
-  error?: string
-}
 
 const useChangeDoctor = () => {
   const { token } = useAuth()

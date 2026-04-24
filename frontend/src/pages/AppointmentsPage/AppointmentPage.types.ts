@@ -1,5 +1,5 @@
 import { CONFIRMATION_TYPE } from "./AppointmentsPage.config"
-import type { BooleanVoidFunc, Appointment } from "../../types/index.types"
+import type { BooleanSetter, Appointment } from "../../types/index.types"
 
 export type SelectedAppointment = {
   id: string
@@ -13,6 +13,8 @@ export type SelectedAppointment = {
 export type PendingDoctorChange = {
   appointmentId: string
   newDoctorId: string
+  prevDoctorName: string
+  newDoctorName: string
 }
 
 export type PendingReschedule = {
@@ -31,23 +33,23 @@ export type ConfirmationStateModal = {
   isOpen: boolean
   type: string
   appointmentId: string
-  prevState: string
+  prevState?: string
   newState: string
 }
 
 export type UseFlaggingStates = {
   isChangeDoctorOpen: boolean
-  setIsChangeDoctorOpen: BooleanVoidFunc
+  setIsChangeDoctorOpen: BooleanSetter
   isModalRescheduleOpen: boolean
-  setIsModalRescheduleOpen: BooleanVoidFunc
+  setIsModalRescheduleOpen: BooleanSetter
   isModalAppointmentOpen: boolean
-  setisModalAppointmentOpen: BooleanVoidFunc
+  setisModalAppointmentOpen: BooleanSetter
   isConfirmationOpen: boolean
-  setIsConfirmationOpen: BooleanVoidFunc
+  setIsConfirmationOpen: BooleanSetter
   isShowCancelled: boolean
-  setIsShowCancelled: BooleanVoidFunc
+  setIsShowCancelled: BooleanSetter
   isShowPast: boolean
-  setIsShowPast: BooleanVoidFunc
+  setIsShowPast: BooleanSetter
 }
 
 export type UseCategoryAppointment = {
@@ -59,7 +61,22 @@ export type UseCategoryAppointment = {
   hasCancelledAppointments: boolean
 }
 
-export type UseAppointmentPage = {
-  ...UseFlaggingStates,
-  ...UseCategoryAppointment
+export type UseStates = {
+  pendingDoctorChange: PendingDoctorChange | null
+  setPendingDoctorChange: (value: PendingDoctorChange | null) => void
+  selectedAppointment: SelectedAppointment | null
+  setSelectedAppointment: (value: SelectedAppointment | null) => void
+  pendingReschedule: PendingReschedule | null
+  setPendingReschedule: (value: PendingReschedule | null) => void
+  confirmationStateModal: ConfirmationStateModal | null
+  setConfirmationStateModal: (value: ConfirmationStateModal | null) => void
 }
+
+// export type Handlers = {
+
+// }
+
+// export type UseAppointmentPage = {
+//   ...UseFlaggingStates,
+//   ...UseCategoryAppointment
+// }

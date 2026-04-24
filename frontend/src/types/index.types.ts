@@ -1,10 +1,17 @@
-export type BooleanVoidFunc = (value: boolean) => void
+import type { Dispatch, SetStateAction } from "react";
+
+export type BooleanSetter = Dispatch<SetStateAction<boolean>>;
 
 export type Doctor = {
   id: string
   name: string
   specialty: string
   avatarUrl?: string | null
+}
+
+export type MutationResult = {
+  success: boolean
+  error?: string
 }
 
 export type Appointment = {
