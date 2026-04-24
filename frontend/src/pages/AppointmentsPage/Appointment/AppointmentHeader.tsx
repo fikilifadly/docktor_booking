@@ -1,9 +1,8 @@
 type Props = {
   onBook: () => void;
-  onLogout: () => void;
 };
 
-const AppointmentHeader = ({ onBook, onLogout }: Props) => (
+const AppointmentHeader = ({ onBook }: Props) => (
   <div className="appts-header-row">
     <div>
       <h1 className="appts-title">Upcoming Appointments</h1>

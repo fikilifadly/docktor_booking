@@ -24,7 +24,6 @@ import type { Appointment, MutationResult, Doctor } from "../../types/index.type
 import { combineDateAndTime, splitDateUtc } from "../../lib/timeSlotUtils"
 
 const {
-  NUMBERS: { ZERO },
   STATUS_APPOINTMENT: { CANCELLED },
 } = Constants
 
@@ -69,16 +68,15 @@ const _handleConfirmReschedule = (
  * @private
  */
 const _handleOpenConfirmationModal = ({ setConfirmationStateModal }: UseStates) =>
-  (type: ConfirmationType, appointmentId: string, prevState: string = "", newState: string = "") =>
-    (): void => {
-      setConfirmationStateModal({
-        isOpen: true,
-        type,
-        appointmentId,
-        prevState,
-        newState,
-      })
-    }
+  (type: ConfirmationType, appointmentId: string, prevState: string = "", newState: string = "") => {
+    setConfirmationStateModal({
+      isOpen: true,
+      type,
+      appointmentId,
+      prevState,
+      newState,
+    })
+  }
 
 /**
  * _handleCloseConfirmationModal
@@ -104,7 +102,7 @@ const _handleSelectNewDoctor = (
   { setIsChangeDoctorOpen }: UseFlaggingStates,
   { setPendingDoctorChange, setConfirmationStateModal, selectedAppointment }: UseStates,
   doctorMap: Map<string, Doctor>,
-) => (doctorId: string): VoidFunction => (): void => {
+) => (doctorId: string): void => {
   if (!selectedAppointment) return
 
   const newDoctor = doctorMap.get(doctorId)
@@ -240,8 +238,7 @@ const _handleOnConfirmActionModal = (
   refetch: () => void,
 ) => async (): Promise<void> => {
   const { confirmationStateModal, pendingDoctorChange, pendingReschedule, setPendingDoctorChange, setPendingReschedule, setConfirmationStateModal } = states
-
-  if (!confirmationStateModal?.type || !confirmationStateModal?.appointmentId) return
+  if (!confirmationStateModal?.type) return
 
   try {
     switch (confirmationStateModal.type) {

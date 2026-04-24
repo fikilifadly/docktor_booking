@@ -1,17 +1,18 @@
 import React from "react";
 import type { Appointment, Doctor } from "../../../types/index.types";
 import { formatDateTime } from "../../../lib/timeSlotUtils";
+import { CONFIRMATION_TYPE } from "../AppointmentsPage.config";
 
 type Props = {
   title: string;
-  appointments: Appointment[];
+appointments: Appointment[];
   doctorMap: Map<string, Doctor>;
   emptyMessage: string;
   expandable?: boolean;
   isOpen?: boolean;
   onToggle?: () => void;
-  onCancel?: (appointment: Appointment) => void;
-  onReschedule?: (appointment: Appointment) => void;
+  onCancel?: (type: string, appointmentId: string, cancelDetail: string) => void;
+  onReschedule?: (appointment: Appointment, doctor: Doctor) => void;
   onChangeDoctor?: (appointment: Appointment, doctor: Doctor) => void;
   className?: string;
 };
@@ -77,11 +78,36 @@ const AppointmentSection: React.FC<Props> = ({
                     </div>
 
                     <div className="appointment-actions">
-                      {onChangeDoctor && doctor && <button onClick={() => onChangeDoctor(appointment, doctor)} className="btn-change-appointment">Change</button>}
+                      {onChangeDoctor && doctor && (
+                        <button
+                          onClick={() => onChangeDoctor(appointment, doctor)}
+                          className="btn-change-appointment"
+                        >
+                          Change
+                        </button>
+                      )}
 
-                      {onReschedule && <button onClick={() => onReschedule(appointment)} className="btn-reschedule-appointment">Reschedule</button>}
+                      {onReschedule && doctor && (
+                        <button
+                          onClick={() => onReschedule(appointment, doctor)}
+                          className="btn-reschedule-appointment"
+                        >
+                          Reschedule
+                        </button>
+                      )}
 
-                      {onCancel && <button onClick={() => onCancel(appointment)} className="btn-cancel-appointment">Cancel</button>}
+                      {onCancel && (
+                        <button
+                          onClick={() => {
+                            const cancelDetail = `Appointment with ${doctor?.name || `Dr. ${appointment.doctorId}`} on ${date} at ${time}`;
+
+                            onCancel(CONFIRMATION_TYPE.CANCEL.type, appointment.id, cancelDetail);
+                          }}
+                          className="btn-cancel-appointment"
+                        >
+                          Cancel
+                        </button>
+                      )}
                     </div>
                   </div>
                 );

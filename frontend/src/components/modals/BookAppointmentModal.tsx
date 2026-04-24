@@ -137,11 +137,11 @@ export default function BookAppointmentModal({ isOpen, onClose, onSuccessBooked,
                 </select>
               </div>
             </div>
-            <div className="cta-show-calendar">
+            {selectedDoctor && <div className="cta-show-calendar">
               <button className="btn-show-calendar" onClick={handleToggleCalendar}>
                 Show Doctor Availability
               </button>
-            </div>
+            </div>}
             {showCalendar && <div className="date-selection">
               <h4 className="section-title">Select a Date</h4>
               <Calendar
