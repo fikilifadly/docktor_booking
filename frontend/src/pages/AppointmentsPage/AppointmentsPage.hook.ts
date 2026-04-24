@@ -19,7 +19,7 @@ import type {
   UseCategoryAppointment,
   UseStates,
   ConfirmationType
-} from "./AppointmentPage.types"
+} from "./AppointmentsPage.types"
 import type { Appointment, MutationResult, Doctor } from "../../types/index.types"
 import { combineDateAndTime, splitDateUtc } from "../../lib/timeSlotUtils"
 

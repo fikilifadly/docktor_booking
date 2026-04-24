@@ -3,14 +3,15 @@ import { PageLayout, PageContainer } from "../../components/layout";
 import "./styles.css";
 import ConfirmationModal from "../../components/modals/ConfirmationModal";
 import { CONFIRMATION_TYPE } from "./AppointmentsPage.config";
-import { getConfirmationTitleMessage } from "./AppointmentPage.utils";
+import { getConfirmationTitleMessage } from "./AppointmentsPage.utils";
 import ChangeDoctorModal from "../../components/modals/ChangeDoctorModal";
 import RescheduleAppointmentModal from "../../components/modals/RescheduleAppointmentModal";
-import useAppointmentPage from "./AppointmentPage.hook";
+import useAppointmentPage from "./AppointmentsPage.hook";
 import AppointmentHeader from "./Appointment/AppointmentHeader";
 import AppointmentSection from "./Appointment/AppointmentSection";
 import type { Doctor } from "../../types/index.types";
 import AppointmentEmptyState from "./Appointment/AppointmentEmptyState";
+import Loader from "../../components/ui/Loader";
 
 export default function AppointmentsPage() {
   const {
@@ -40,7 +41,8 @@ export default function AppointmentsPage() {
     pastAppointments,
     handleOnChangeDoctorButton,
     handleOnRescheduleButton,
-    hasUpcomingAppointments
+    hasUpcomingAppointments,
+    loadingAppointments,
   } = useAppointmentPage();
 
   const headerActions = (
@@ -61,7 +63,9 @@ export default function AppointmentsPage() {
     >
       <PageContainer>
         <AppointmentHeader onBook={handleToggleBookAppointmentModal} />
-        {!hasUpcomingAppointments ? (
+        {loadingAppointments ? (
+          <Loader />
+        ) : !hasUpcomingAppointments ? (
           <AppointmentEmptyState />
         ) : (
           <>

@@ -1,5 +1,5 @@
 import { CONFIRMATION_TYPE } from './AppointmentsPage.config';
-import type { ConfirmationTitleMessage } from './AppointmentPage.types';
+import type { ConfirmationTitleMessage } from './AppointmentsPage.types';
 
 const getConfirmationTitleMessage = (type: string, prevState: string = '', newState: string = ''): ConfirmationTitleMessage => {
   const result = {

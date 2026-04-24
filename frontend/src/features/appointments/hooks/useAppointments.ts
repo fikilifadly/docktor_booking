@@ -16,13 +16,13 @@ type Appointment = {
 
 export function useAppointments() {
   const { token } = useAuth()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string>('')
+  const [loadingAppointments, setLoadingAppointments] = useState(false)
+  const [errorAppointments, setErrorAppointments] = useState<string>('')
   const [appointments, setAppointments] = useState<Appointment[]>([])
 
   async function fetchAppointments() {
-    setLoading(true)
-    setError('')
+    setLoadingAppointments(true)
+    setErrorAppointments('')
     try {
       const data = await graphql<{ appointmentsByPatient: Appointment[] }>(Query.APPOINTMENTS_BY_PATIENT_QUERY, undefined, token || undefined)
       setAppointments(data.appointmentsByPatient || [])
@@ -33,9 +33,9 @@ export function useAppointments() {
         window.location.href = '/login'
         return
       }
-      setError(message)
+      setErrorAppointments(message)
     } finally {
-      setLoading(false)
+      setLoadingAppointments(false)
     }
   }
 
@@ -43,7 +43,7 @@ export function useAppointments() {
     if (token) fetchAppointments()
   }, [token])
 
-  return { loading, error, appointments, refetch: fetchAppointments }
+  return { loadingAppointments, errorAppointments, appointments, refetch: fetchAppointments }
 }
 
 

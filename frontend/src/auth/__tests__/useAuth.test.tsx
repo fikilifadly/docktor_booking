@@ -3,6 +3,12 @@ import { renderHook, act } from '@testing-library/react'
 import { useAuth } from '../useAuth'
 import { AuthProvider } from '../AuthContext'
 
+vi.mock('jwt-decode', () => ({
+  jwtDecode: vi.fn()
+}))
+
+import { jwtDecode } from 'jwt-decode'
+
 // Mock localStorage
 const localStorageMock = {
   getItem: vi.fn(),
@@ -30,6 +36,12 @@ describe('useAuth', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     localStorageMock.getItem.mockReturnValue(null)
+    
+    vi.mocked(jwtDecode).mockReturnValue({
+      sub: 'patient-1',
+      email: 'test@example.com',
+      exp: Math.floor(Date.now() / 1000) + 3600 
+    })
   })
 
   it('should initialize with no authentication', () => {
@@ -41,9 +53,15 @@ describe('useAuth', () => {
   })
 
   it('should load authentication from localStorage on mount', () => {
-    const savedToken = 'saved-token'
+    const savedToken = 'valid-jwt-token'
     const savedPatient = { id: 'patient-1', email: 'test@example.com' }
     
+    vi.mocked(jwtDecode).mockReturnValue({
+      sub: 'patient-1',
+      email: 'test@example.com',
+      exp: Math.floor(Date.now() / 1000) + 3600
+    })
+
     localStorageMock.getItem
       .mockReturnValueOnce(savedToken)
       .mockReturnValueOnce(JSON.stringify(savedPatient))
@@ -69,12 +87,12 @@ describe('useAuth', () => {
     expect(localStorageMock.setItem).toHaveBeenCalledWith('auth_patient', JSON.stringify({ id: 'patient-1', email: 'test@example.com' }))
   })
 
-  it('should handle logout', () => {
+  it('should handle logout', async () => {
     const { result } = renderHook(() => useAuth(), { wrapper })
     
     // First login
-    act(() => {
-      result.current.login('test@example.com', 'password')
+    await act(async () => {
+      await result.current.login('test@example.com', 'password')
     })
     
     // Then logout
