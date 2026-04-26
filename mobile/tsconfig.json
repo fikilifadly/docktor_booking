@@ -1,6 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "types": ["jest", "node"],
     "strict": true,                   // Mengaktifkan semua pengecekan ketat
     "noImplicitAny": true,            // Error jika ada variabel yang tipenya 'any' secara tidak sengaja
     "strictNullChecks": true,         // Error jika potensi variabel null tidak ditangani
